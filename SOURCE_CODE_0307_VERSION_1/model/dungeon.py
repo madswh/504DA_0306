@@ -3,7 +3,7 @@
 
 import numpy as np
 from collections import deque
-from room import Room
+from SOURCE_CODE_0307_VERSION_1.model.room import Room
 
 class Dungeon:
     def __init__(self, width=5, height=5):

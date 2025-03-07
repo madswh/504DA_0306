@@ -2,9 +2,8 @@
 
 
 class GameView:
-    def __init__(self, player_name, hero=None, is_gui=False):
-        self.player_name = player_name
-        self.hero = hero
+    def __init__(self,is_gui=False):
+        self.hero = 0
         self.is_gui = is_gui  # Store if this is GUI or console.
 
     def show_intro(self):
@@ -23,8 +22,12 @@ class GameView:
             f"Have fun, and good luck on your adventure!\n"
         )
 
+    def load_from_saved_game(self):
+        return input ('''You have a previously saved game, would you like to 
+        continue from where you left off?\n1. Yes\n2. No''')
+        
     def enter_name(self):
-        return input(f"\nPlease enter your name as the Adventurer: ").strip()
+        return input(f"\nPlease enter your name: ").strip()
 
     def choose_hero_class(self):
         print("Please choose your hero class:")

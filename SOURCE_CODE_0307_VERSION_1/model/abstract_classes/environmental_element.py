@@ -1,7 +1,7 @@
 
 
 
-from item_factory import ItemFactory
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.item_factory import ItemFactory
 
 class EnvironmentalElement(ItemFactory):
     def __init__(self, name):

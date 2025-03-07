@@ -2,11 +2,11 @@
 
 
 import random
-from pillar import Pillar
-from potion import Potion
-from other_potion import OtherPotion
-from environmental_element import EnvironmentalElement
-from monster_factory import MonsterFactory
+from SOURCE_CODE_0307_VERSION_1.model.items.pillar import Pillar
+from SOURCE_CODE_0307_VERSION_1.model.items.potion import Potion
+from SOURCE_CODE_0307_VERSION_1.model.items.other_potion import OtherPotion
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.environmental_element import EnvironmentalElement
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster_factory import MonsterFactory
 
 class Room:
     def __init__(self, initialize_contents=True):

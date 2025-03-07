@@ -1,14 +1,13 @@
-
-
-
 import random
-from game_view import GameView
-from dungeon import Dungeon
-from warrior import Warrior
-from priestess import Priestess
-from thief import Thief
-from boss_monster import BossMonster
-from mock_battle import MockBattle
+from SOURCE_CODE_0307_VERSION_1.view.game_view import GameView
+from SOURCE_CODE_0307_VERSION_1.model.dungeon import Dungeon
+from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
+from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
+from SOURCE_CODE_0307_VERSION_1.controller.mock_battle import MockBattle
+import SOURCE_CODE_0307_VERSION_1.data.database as db
+from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 
 class GameController:
     def __init__(self, gui=None, hero_name=None, hero_type=None):
@@ -19,45 +18,44 @@ class GameController:
         self.current_location = (0, 0)  # Starting position.
 
         self.dungeon = Dungeon() # Initialize the Dungeon.
-
-        if hero_name and hero_type:
-            self.initialize_game(hero_name, hero_type)
-        else:
-            self.default_setup()
-
-    def default_setup(self):
-        # Prompt for player's name and hero class using GameView methods.
-        player_name = self.view.enter_name()
-        hero_choice = self.view.choose_hero_class()
-
-        # Translate hero_choice into hero_type.
-        hero_type = ""
-        if hero_choice == 1:
-            hero_type = "Warrior"
-        elif hero_choice == 2:
-            hero_type = "Priestess"
-        elif hero_choice == 3:
-            hero_type = "Thief"
-
-        self.initialize_game(player_name, hero_type)
-
-    def initialize_game(self, player_name, hero_type):
-        self.view = GameView(player_name, is_gui=(self.gui is not None))  # Initialize GameView.
-        self.choose_hero(player_name, hero_type)  # Set the chosen hero.
-        self.view.hero = self.hero  # Assign the hero to the view.
+        self.pickler = Pickler()
+        
+        self.initialize_game()
+        
+    def make_database(self):
+        db.main()
+        self.conn = db.create_connection(r"Database/dungeon_game.sql")
+    
+    def find_pickles(self):
+        try: open('SOURCE_CODE_0307_VERSION_1/data/pickles/saved_dungeon.pickle')
+        except FileNotFoundError as e:
+            if e: return False
+            return True
+    
+    def initialize_game(self):
+        self.make_database()
+        self.view = GameView(is_gui=(self.gui is not None))  # Initialize GameView.
+        if self.find_pickles():
+            choice = self.view.load_from_saved_game()
+            if choice == 1:
+                self.dungeon, self.hero, self.current_location = self.pickler.load_game()
+            else:
+                name = self.view.enter_name()
+                self.choose_hero(self.view.choose_hero_class())
+                string = f'{name} the {self.hero.name}'
+                self.hero.name = string
         self.play()
 
-    def choose_hero(self, player_name, hero_type):
-        if hero_type == "Warrior":
-            self.hero = Warrior(player_name)
-        elif hero_type == "Priestess":
-            self.hero = Priestess(player_name)
-        elif hero_type == "Thief":
-            self.hero = Thief(player_name)
+    def choose_hero(self,choice):
+        if choice == 1:
+            self.hero = Warrior()
+        elif choice == 2:
+            self.hero = Priestess()
+        elif choice == 3:
+            self.hero = Thief()
         else:
             self.view.display_message("Invalid choice! Please select a valid hero class.")
             return
-        self.view.display_message(f"\n{player_name} has chosen the {self.hero.__class__.__name__}!")
         self.view.hero = self.hero
 
     def play(self):

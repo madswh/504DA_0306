@@ -2,9 +2,9 @@
 
 
 import random
-from ogre import Ogre
-from gremlin import Gremlin
-from skeleton import Skeleton
+from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
+from SOURCE_CODE_0307_VERSION_1.model.characters.gremlin import Gremlin
+from SOURCE_CODE_0307_VERSION_1.model.characters.skeleton import Skeleton
 
 class MonsterFactory:
     def __init__(self):

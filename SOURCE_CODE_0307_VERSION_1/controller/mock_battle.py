@@ -1,7 +1,7 @@
 
 
-from boss_monster import BossMonster
-from priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
 import random
 
 class MockBattle:
