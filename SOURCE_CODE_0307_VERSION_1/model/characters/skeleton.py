@@ -6,19 +6,19 @@ class Skeleton(Monster):
         self.fill_stats()
         
     def fill_stats(self):
-        return super().fill_stats()
+        return Monster.fill_stats(self)
 
     def attack(self, opponent):
-        return super().attack(opponent)
+        return Monster.attack(self,opponent)
     
     def get_hit(self, damage):
-        return super().get_hit(damage)
+        return Monster.get_hit(self,damage)
     
     def can_hit(self):
-        return super().can_hit()
+        return Monster.can_hit(self)
     
     def heal(self):
-        return super().heal()
+        return Monster.heal(self)
     
     @property
     def name(self):

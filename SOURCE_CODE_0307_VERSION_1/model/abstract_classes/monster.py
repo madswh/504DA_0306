@@ -12,7 +12,7 @@ class Monster(DungeonCharacter, ABC):
     def fill_stats(self):
         conn = create_connection('SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
         cursor = conn.cursor()
-        text = f'''select * from heroes where name = {self.__name}'''
+        text = f'''select * from monsters where name = {self.__name}'''
         self.__name, self.__hit_points, self.__min_damage, self.__max_damage, self.__chance_to_hit, self.__chance_to_heal, self.__min_heal, self.__max_heal, self.__is_boss, self.__flavor_text = cursor.execute(text)
 
     @abstractmethod

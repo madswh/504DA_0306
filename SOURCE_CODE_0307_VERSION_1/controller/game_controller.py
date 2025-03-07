@@ -10,10 +10,9 @@ import SOURCE_CODE_0307_VERSION_1.data.database as db
 from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 
 class GameController:
-    def __init__(self, gui=None, hero_name=None, hero_type=None):
-        self.gui = gui
+    def __init__(self):
         self.hero = None
-        self.view = GameView("TEAM AWESOME", is_gui=(gui is not None))  # Pass whether GUI is used.
+        self.view = GameView()  # Pass whether GUI is used.
         self.view.show_intro()
         self.current_location = (0, 0)  # Starting position.
 

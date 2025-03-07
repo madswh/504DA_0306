@@ -6,22 +6,22 @@ class Priestess(Hero):
         self.__name = 'Priestess'
         
     def fill_stats(self):
-        return super().fill_stats()
+        return Hero.fill_stats(self)
     
     def attack(self, opponent):
-        return super().attack(opponent)
+        return Hero.attack(self,opponent)
     
     def get_hit(self, damage):
-        return super().get_hit(damage)
+        return Hero.get_hit(self,damage)
     
     def can_hit(self):
-        return super().can_hit()
+        return Hero.can_hit(self)
     
     def block(self):
-        return super().block()
+        return Hero.block(self)
     
     def handle_other_potion(self, potion_name, opponent_name):
-        return super().handle_other_potion(potion_name, opponent_name)
+        return Hero.handle_other_potion(self,potion_name, opponent_name)
     
     def special_skill(self):
         healing = random.randint(30, 60)

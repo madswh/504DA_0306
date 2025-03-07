@@ -1,6 +1,3 @@
-
-
-
 class GameView:
     def __init__(self,is_gui=False):
         self.hero = 0
