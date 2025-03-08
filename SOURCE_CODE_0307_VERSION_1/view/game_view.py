@@ -1,7 +1,6 @@
 class GameView:
-    def __init__(self,is_gui=False):
+    def __init__(self):
         self.hero = 0
-        self.is_gui = is_gui  # Store if this is GUI or console.
 
     def show_intro(self):
         print(
@@ -54,23 +53,17 @@ class GameView:
     def display_hero_status(self):
         if self.hero:
             print("\n-- Player Status ---")
-            print(f"Player Name: {self.player_name}")
-            print(f"Hero Name: {self.hero.__class__.__name__}")
+            print(f"Player Name: {self.hero.name}")
             print(f"Hit Points: {self.hero.hit_points}")
             print(f"Healing Potions: {self.hero.healing_potions}")
             print(f"Vision Potions: {self.hero.vision_potions}")
             print(f"Pillars Found: {', '.join(self.hero.pillars) if self.hero.pillars else 'None'}")
             print(f"--- End of Player Status ---\n")
-            print(f"--- {self.hero.__class__.__name__} Information ---")
-            print(f"Hero Name: {self.hero.__class__.__name__}")
-            print(f"HP: {self.hero.hit_points}")
-            print(f"Attack Damage: {self.hero.min_damage}-{self.hero.max_damage}")
-            print(f"--- End of {self.hero.__class__.__name__} Information ---\n")
 
     def show_battle_result(self, attacker, defender, damage):
-        print(f"\n{self.player_name} the {attacker.__class__.__name__} attacks {defender.name} for {damage} damage!")
+        print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")
         print(f"\n--- Current HP Status ---")
-        print(f"{self.player_name} the {attacker.__class__.__name__} HP: {attacker.hit_points} \nVS.")
+        print(f"{self.hero.name} the {attacker.name} HP: {attacker.hit_points} \nVS.")
         print(f"{defender.name} HP: {defender.hit_points}")
         print(f"--- End of HP Status ---\n")
         if defender.hit_points <= 0:

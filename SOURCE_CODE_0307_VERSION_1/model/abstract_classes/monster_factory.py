@@ -12,4 +12,4 @@ class MonsterFactory:
         If monster_name is provided and recognized, creates that specific monsters.
         Otherwise, randomly selects one from the available monsters types.
         """
-        return random.choice(Ogre(),Gremlin(),Skeleton())
+        return random.choice((Ogre(),Gremlin(),Skeleton()))

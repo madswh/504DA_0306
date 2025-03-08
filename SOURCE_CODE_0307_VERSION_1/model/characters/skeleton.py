@@ -1,12 +1,32 @@
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster import Monster
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster import *
 
 class Skeleton(Monster):
     def __init__(self):
         self.__name = 'Skeleton'
+        self.__hit_points = 0
+        self.__min_damage = 0
+        self.__max_damage = 0
+        self.__chance_to_hit = 0
+        self.__chance_to_heal = 0
+        self.__min_heal = 0
+        self.__max_heal = 0
+        self.__is_boss = 0
+        self.__flavor_text = 0
         self.fill_stats()
         
     def fill_stats(self):
-        return Monster.fill_stats(self)
+        data = super().fill_stats(self.name)
+        data = data[0]
+        self.name = data[0]
+        self.hit_points = data[1]
+        self.min_damage = data[2]
+        self.max_damage = data[3]
+        self.chance_to_hit = data[4]
+        self.chance_to_heal = data[5]
+        self.min_heal = data[6]
+        self.max_heal = data[7]
+        self.is_boss = data[8]
+        self.flavor_text = data[9]
 
     def attack(self, opponent):
         return Monster.attack(self,opponent)
@@ -23,6 +43,9 @@ class Skeleton(Monster):
     @property
     def name(self):
         return self.__name
+    @name.setter
+    def name(self,name):
+        self.__name = name
     
     @property
     def hit_points(self):
@@ -34,31 +57,55 @@ class Skeleton(Monster):
     @property
     def min_damage(self):
         return self.__min_damage
+    @min_damage.setter
+    def min_damage(self,number):
+        self.__min_damage = number
     
     @property
     def max_damage(self):
         return self.__max_damage
+    @max_damage.setter
+    def max_damage(self,number):
+        self.__max_damage = number
     
     @property
     def chance_to_hit(self):
         return self.__chance_to_hit
+    @chance_to_hit.setter
+    def chance_to_hit(self,other):
+        self.__chance_to_hit = other
     
     @property
     def chance_to_heal(self):
         return self.__chance_to_heal
-    
+    @chance_to_heal.setter
+    def chance_to_heal(self,other):
+        self.__chance_to_heal = other
+   
     @property
     def min_heal(self):
         return self.__min_heal
+    @min_heal.setter
+    def min_heal(self,other):
+        self.__min_heal = other
     
     @property
     def max_heal(self):
         return self.__max_heal
+    @max_heal.setter
+    def max_heal(self,other):
+        self.__max_heal = other
 
     @property
     def is_boss(self):
         return self.__is_boss
+    @is_boss.setter
+    def is_boss(self,other):
+        self.__is_boss = other
     
     @property
     def flavor_text(self):
         return self.__flavor_text
+    @flavor_text.setter
+    def flavor_text(self,other):
+        self.__flavor_text = other

@@ -5,15 +5,15 @@ from SOURCE_CODE_0307_VERSION_1.data.database import create_connection
 
 class Hero(DungeonCharacter, ABC):
     def __init__(self):
-        self.__name = None
-        self.fill_stats()
-        
+        pass
+    
     @abstractmethod
-    def fill_stats(self):
+    def fill_stats(self,name):
         conn = create_connection('SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
         cursor = conn.cursor()
-        text = f'''select * from heroes where name = {self.__name}'''
-        self.__name, self.__hit_points, self.__min_damage, self.__max_damage, self.__chance_to_hit, self.__chance_to_block, self.__min_heal, self.__max_heal, self.__special_skill = cursor.execute(text)
+        data = []
+        for i in cursor.execute('SELECT * FROM heroes WHERE name =?', (name,)): data.append(i)
+        return data
     
     @abstractmethod
     def attack(self, opponent):

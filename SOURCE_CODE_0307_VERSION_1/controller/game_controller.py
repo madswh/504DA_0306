@@ -33,16 +33,16 @@ class GameController:
     
     def initialize_game(self):
         self.make_database()
-        self.view = GameView(is_gui=(self.gui is not None))  # Initialize GameView.
+        self.view = GameView()  # Initialize GameView.
         if self.find_pickles():
             choice = self.view.load_from_saved_game()
             if choice == 1:
                 self.dungeon, self.hero, self.current_location = self.pickler.load_game()
-            else:
-                name = self.view.enter_name()
-                self.choose_hero(self.view.choose_hero_class())
-                string = f'{name} the {self.hero.name}'
-                self.hero.name = string
+        else:
+            name = self.view.enter_name()
+            self.choose_hero(self.view.choose_hero_class())
+            string = f'{name} the {self.hero.name}'
+            self.hero.name = string
         self.play()
 
     def choose_hero(self,choice):

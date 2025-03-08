@@ -3,10 +3,32 @@ import random
 
 class Priestess(Hero):
     def __init__(self):
-        self.__name = 'Priestess'
+        self.__name = 'Priestess'    
+        self.__hit_points = 0
+        self.__min_damage = 0
+        self.__max_damage = 0
+        self.__chance_to_hit = 0
+        self.__chance_to_block = 0
+        self.__min_heal = 0
+        self.__max_heal = 0
+        
+        self.vision_potions = 0
+        self.healing_potions = 0
+        self.pillars = []
+        
+        self.fill_stats()
         
     def fill_stats(self):
-        return Hero.fill_stats(self)
+        data = super().fill_stats(self.name)
+        data = data[0]
+        self.name = data[0]
+        self.hit_points = data[1]
+        self.min_damage = data[2]
+        self.max_damage = data[3]
+        self.chance_to_hit = data[4]
+        self.chance_to_block = data[5]
+        self.min_heal = data[6]
+        self.max_heal = data[7]
     
     def attack(self, opponent):
         return Hero.attack(self,opponent)
@@ -32,6 +54,9 @@ class Priestess(Hero):
     @property
     def name(self):
         return self.__name
+    @name.setter
+    def name(self,name):
+        self.__name = name
     
     @property
     def hit_points(self):
@@ -43,27 +68,41 @@ class Priestess(Hero):
     @property
     def min_damage(self):
         return self.__min_damage
+    @min_damage.setter
+    def min_damage(self,number):
+        self.__min_damage = number
     
     @property
     def max_damage(self):
         return self.__max_damage
+    @max_damage.setter
+    def max_damage(self,number):
+        self.__max_damage = number
     
     @property
     def chance_to_hit(self):
         return self.__chance_to_hit
+    @chance_to_hit.setter
+    def chance_to_hit(self,other):
+        self.__chance_to_hit = other
     
     @property
     def chance_to_block(self):
         return self.__chance_to_block
-    
+    @chance_to_block.setter
+    def chance_to_block(self,other):
+        self.__chance_to_block = other
+   
     @property
     def min_heal(self):
         return self.__min_heal
+    @min_heal.setter
+    def min_heal(self,other):
+        self.__min_heal = other
     
     @property
     def max_heal(self):
         return self.__max_heal
-
-    @property
-    def special_slill(self):
-        return self.__special_skill
+    @max_heal.setter
+    def max_heal(self,other):
+        self.__max_heal = other
