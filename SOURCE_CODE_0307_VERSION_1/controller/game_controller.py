@@ -22,8 +22,7 @@ class GameController:
         self.initialize_game()
         
     def make_database(self):
-        db.main()
-        self.conn = db.create_connection(r"Database/dungeon_game.sql")
+        self.conn = db.create_connection(r"SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql")
     
     def find_pickles(self):
         try: open('SOURCE_CODE_0307_VERSION_1/data/pickles/saved_dungeon.pickle')
