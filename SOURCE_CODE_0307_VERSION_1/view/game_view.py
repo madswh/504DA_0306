@@ -1,6 +1,8 @@
 class GameView:
-    def __init__(self):
-        self.hero = 0
+    def __init__(self,controller):
+        self.controller = controller
+        self.hero = None
+        self.show_intro()
 
     def show_intro(self):
         print(
@@ -19,8 +21,8 @@ class GameView:
         )
 
     def load_from_saved_game(self):
-        return input ('''You have a previously saved game, would you like to 
-        continue from where you left off?\n1. Yes\n2. No''')
+        return int(input ('''You have a previously saved game, would you like to 
+        continue from where you left off?\n1. Yes\n2. No'''))
         
     def enter_name(self):
         return input(f"\nPlease enter your name: ").strip()
@@ -128,3 +130,4 @@ class GameView:
 
     def display_message(self, message):
         print(message)
+
