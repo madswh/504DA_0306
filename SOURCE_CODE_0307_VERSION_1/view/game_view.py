@@ -5,16 +5,19 @@ class GameView:
     def show_intro(self):
         print(
             f"\nWelcome to Dungeon Adventure 2.0!\n"
-            f"In this game, you will explore a dungeon with multiple rooms.\n"
+            f"In this adventure dungeon exploration game, you will explore its multiple rooms, each presenting unique challenges.\n"
             f"Each room may contain randomly generated item(s) and present threats, such as monsters and pits.\n"
-            f"Choose your hero type for a battle advantage.\n"
-            f"You can move around the dungeon maze (N, E, W, S), collect healing and vision potions,\n"
-            f"and use other potions that may be present in the room while facing dangers like pits and monsters.\n"
-            f"Utilize your hero's features and potions for advantages in battles.\n"
-            f"Defeat the monsters before collecting each pillar found (i.e., A, E, I, P).\n"
-            f"Face the boss monster to exit the dungeon.\n"
-            f"Your objective is to find the four Pillars of Object-Oriented Programming (Abstraction, Encapsulation, Inheritance, and Polymorphism) and find the exit to win the game.\n"
-            f"Be cautious: if your hit points reach 0, it will be Game Over!\n"
+            f"Choose your hero type for a battle advantage, as each hero comes with unique features (e.g., special skills, damage, etc.).\n"
+            f"You can navigate the dungeon maze using directional inputs (N, E, W, S) to collect various items.\n"
+            f"Use the Healing Potion to restore hit points.\n"
+            f"Use the Vision Potion to display the dungeon map, revealing your current location and surroundings.\n"
+            f"Only one of the other potions with effects for Agility, Medicine, and Poison is randomly present in the room.\n"
+            f"Be prepared to face dangers such as pits (X), where you may fall and take damage, and monsters (M) that you must defeat.\n"
+            f"You must defeat a monster before collecting each pillar (A, E, I, P).\n"
+            f"Finally, face the boss monster to exit the dungeon.\n"
+            f"Your objective is to collect all four pillars of Object-Oriented Programming (Abstraction, Encapsulation, Inheritance, and Polymorphism),"
+            f"find the exit, and defeat the boss monster guarding it to win the game.\n"
+            f"Be cautious: if your hit points reach 0, it will result in Game Over!\n"
             f"Have fun, and good luck on your adventure!\n"
         )
 
