@@ -199,7 +199,7 @@ class Room:
         # Add more information about the room features.
         features = []
         if self.__monster:
-            features.append(str(self.__monster))
+            features.append(str(self.monster.name))
         if self.__pillar:
             features.append(str(self.__pillar))
         if self.__has_healing_potion:

@@ -12,8 +12,7 @@ from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 class GameController:
     def __init__(self):
         self.hero = None
-        self.view = GameView()  # Pass whether GUI is used.
-        self.view.show_intro()
+        self.view = None
         self.current_location = (0, 0)  # Starting position.
 
         self.dungeon = Dungeon() # Initialize the Dungeon.
@@ -32,16 +31,15 @@ class GameController:
     
     def initialize_game(self):
         self.make_database()
-        self.view = GameView()  # Initialize GameView.
-        if self.find_pickles():
-            choice = self.view.load_from_saved_game()
-            if choice == 1:
-                self.dungeon, self.hero, self.current_location = self.pickler.load_game()
+        self.view = GameView(self)
+        if self.find_pickles() and self.view.load_from_saved_game() == 1:
+            self.dungeon, self.hero, self.current_location = self.pickler.load_game()
         else:
             name = self.view.enter_name()
             self.choose_hero(self.view.choose_hero_class())
             string = f'{name} the {self.hero.name}'
             self.hero.name = string
+        self.view.hero = self.hero
         self.play()
 
     def choose_hero(self,choice):
@@ -66,8 +64,8 @@ class GameController:
                 self.view.display_message("Game Over! You have no more hit points.")
                 break
 
-            self.display_current_room_contents()
             self.view.display_hero_status() # Display hero status after room contents.
+            self.display_current_room_contents()
 
             action = self.view.get_player_action()
 
@@ -132,7 +130,7 @@ class GameController:
 
     def display_current_room_contents(self):
         current_room = self.dungeon.get_room(*self.current_location)
-        self.view.display_room_contents(current_room)
+        # self.view.display_room_contents(current_room)
 
         # Notify the player about the monster presence.
         if current_room.monster:
@@ -146,19 +144,18 @@ class GameController:
 
     def check_for_pillar(self, current_room):
         if current_room.pillar and current_room.monster:
-            self.view.display_message(f"\nYou see a pillar: {current_room.pillar.name_of_item}")
-            self.view.display_message("\nDefeat the monster before collecting the pillar!")
+            self.view.display_message(f"\nYou see a pillar: {current_room.pillar.name_of_item}, to collect it, defeat the {current_room.monster.name} first.")
 
     def check_for_potions(self, current_room):
         if current_room.has_healing_potion:
             self.hero.healing_potions += 1
             current_room.has_healing_potion = False
-            self.view.display_message("\nYou found a Healing Potion!")
+            self.view.display_message("\nYou collected a Healing Potion!")
 
         if current_room.has_vision_potion:
             self.hero.vision_potions += 1
             current_room.has_vision_potion = False
-            self.view.display_message("\nYou found a Vision Potion!")
+            self.view.display_message("\nYou collected a Vision Potion!")
 
     def handle_other_potions(self, current_room):
         if current_room.has_other_potion:

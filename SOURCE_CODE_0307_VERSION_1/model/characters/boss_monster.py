@@ -1,4 +1,5 @@
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster import *
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster import Monster
+import random
 
 class BossMonster(Monster):
     def __init__(self):
@@ -29,17 +30,25 @@ class BossMonster(Monster):
         self.flavor_text = data[9]
 
     def attack(self, opponent):
-        return Monster.attack(self,opponent)
+        if self.can_hit():
+            if not opponent.block():
+                opponent.get_hit(random.randint(self.__min_damage,self.__max_damage))
+                return True
+        return False
     
     def get_hit(self, damage):
-        return Monster.get_hit(self,damage)
+        self.__hit_points -= damage
+        return True
     
     def can_hit(self):
-        return Monster.can_hit(self)
-    
+        return random.random() <= self.__chance_to_hit
+        
     def heal(self):
-        return Monster.heal(self)
-    
+        if random.random() <= self.chance_to_heal:
+            heal_amount = random.randint(self.min_heal, self.max_heal)
+            self.hit_points += heal_amount
+            print(f"{self.name} heals for {heal_amount} hit points!")
+                
     @property
     def name(self):
         return self.__name
