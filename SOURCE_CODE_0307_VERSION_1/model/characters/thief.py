@@ -32,9 +32,8 @@ class Thief(Hero):
     
     def attack(self, opponent):
         if self.can_hit():
-            if not opponent.block():
-                opponent.get_hit(random.randint(self.__min_damage,self.__max_damage))
-                return True
+            opponent.get_hit(random.randint(self.__min_damage,self.__max_damage))
+            return True
         return False
     
     def get_hit(self, damage):

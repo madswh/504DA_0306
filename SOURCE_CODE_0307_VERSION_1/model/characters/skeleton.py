@@ -47,7 +47,8 @@ class Skeleton(Monster):
         if random.random() <= self.chance_to_heal:
             heal_amount = random.randint(self.min_heal, self.max_heal)
             self.hit_points += heal_amount
-            print(f"{self.name} heals for {heal_amount} hit points!")
+            return True
+        return False
                 
     @property
     def name(self):

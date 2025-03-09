@@ -45,8 +45,8 @@ class GameView:
             except ValueError:
                 print("Please enter a valid number.")
 
-    def display_room_contents(self, current_room):
-        self.display_message(str(current_room))
+    def display_room_contents(self):
+        self.controller.display_current_room_contents()
 
     def display_monster_info(self, monster):
         print(f"\n--- {monster.name} Information ---")
@@ -65,25 +65,23 @@ class GameView:
             print(f"Pillars Found: {', '.join(self.hero.pillars) if self.hero.pillars else 'None'}")
             print(f"--- End of Player Status ---\n")
 
-    def show_battle_result(self, attacker, defender, damage):
-        print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")
-        print(f"\n--- Current HP Status ---")
-        print(f"{self.hero.name} the {attacker.name} HP: {attacker.hit_points} \nVS.")
-        print(f"{defender.name} HP: {defender.hit_points}")
-        print(f"--- End of HP Status ---\n")
-        if defender.hit_points <= 0:
-            print(f"\n{defender.name} has been defeated!\n")
+    # def show_battle_result(self, attacker, defender, damage):
+    #     print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")
+    #     print(f"\n--- Current HP Status ---")
+    #     print(f"{self.hero.name} the {attacker.name} HP: {attacker.hit_points} \nVS.")
+    #     print(f"{defender.name} HP: {defender.hit_points}")
+    #     print(f"--- End of HP Status ---\n")
+    #     if defender.hit_points <= 0:
+    #         print(f"\n{defender.name} has been defeated!\n")
 
-    def display_monster_attack(self, monster, damage):
-        print(f"\n{monster.name} attacks you for {damage} damage!")
+    # def display_monster_attack(self, monster, damage):
+    #     print(f"\n{monster.name} attacks you for {damage} damage!")
 
     def get_player_action(self):
         while True:
-            action = input("\nPlease choose an action:\n1. Move\n2. Attack\n3. Use Potion\n4. Quit\n").strip()
-            if action in ["1", "2", "3", "4"]:
-                return action  # Return the string directly.
-            else:
-                print("Invalid action! Please choose 1 (Move), 2 (Attack), 3 (Use Potion), or 4 (Quit).")
+            action = int(input('''\nPlease choose an action:\n1. Move\n2. Attack\n3. Use Potion\n4. Quit\n'''))
+            if action in [1,2,3,4]: return action
+            print("Invalid action! Please choose 1 (Move), 2 (Attack), 3 (Use Potion), or 4 (Quit).")
 
     def get_move_direction(self):
         print("Please choose a direction:")
@@ -92,31 +90,23 @@ class GameView:
         print("3. East (E)")
         print("4. West (W)")
         while True:
-            direction = input("Please enter the number corresponding to your direction: ").strip()
-            if direction == "1":
-                return "N"
-            elif direction == "2":
-                return "S"
-            elif direction == "3":
-                return "E"
-            elif direction == "4":
-                return "W"
-            else:
-                print("Invalid input! Please enter 1, 2, 3, or 4.")
+            direction = int(input("Please enter the number corresponding to your direction: "))
+            if direction in [1,2,3,4]: return direction
+            print("Invalid input! Please enter 1, 2, 3, or 4.")
 
     def get_potion_type(self):
         print("Choose a potion to use:")
         print("1. Healing Potion")
         print("2. Vision Potion")
         while True:
-            potion_choice = input("Please enter the number corresponding to your potion: ").strip()
-            if potion_choice == "1":
-                return "healing"
-            elif potion_choice == "2":
-                return "vision"
-            else:
-                print("Invalid input! Please enter 1 or 2.")
+            potion_choice = int(input("Please enter the number corresponding to your potion: "))
+            if potion_choice in [1,2]: return potion_choice
+            print("Invalid input! Please enter 1 or 2.")
 
+    def someone_died(self,character,int):
+        if int == 0: print(f'{character.name} has died.')
+        else: print('You died.')
+    
     def confirm_quit(self):
         self.display_message("Are you sure you want to quit?")
         self.display_message("1. Yes")
