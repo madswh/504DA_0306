@@ -2,7 +2,7 @@ from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.hero import Hero
 import random
 
 class Priestess(Hero):
-    def __init__(self):
+    def __init__(self,db_conn):
         self.__name = 'Priestess'    
         self.__hit_points = 0
         self.__min_damage = 0
@@ -15,12 +15,17 @@ class Priestess(Hero):
         self.vision_potions = 0
         self.healing_potions = 0
         self.pillars = []
-        
+        self.conn = db_conn
         self.fill_stats()
-        
+
+    def get_stats(self):
+        cursor = self.conn.cursor()
+        data = []
+        for i in cursor.execute('SELECT * FROM heroes WHERE name =?', (self.name,)): data.append(i)
+        return data[0]
+
     def fill_stats(self):
-        data = super().fill_stats(self.name)
-        data = data[0]
+        data = self.get_stats()
         self.name = data[0]
         self.hit_points = data[1]
         self.min_damage = data[2]

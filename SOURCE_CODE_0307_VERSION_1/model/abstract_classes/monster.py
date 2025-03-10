@@ -19,12 +19,8 @@ class Monster(DungeonCharacter,ABC):
     
     @abstractmethod
     def fill_stats(self,name):
-        conn = create_connection('SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
-        cursor = conn.cursor()
-        data = []
-        for i in cursor.execute('SELECT * FROM monsters WHERE name =?', (name,)): data.append(i)
-        return data
-
+        pass
+    
     @abstractmethod
     def attack(self, opponent):
         pass

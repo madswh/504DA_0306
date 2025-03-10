@@ -15,13 +15,14 @@ class GameController:
         self.view = None
         self.current_location = (0, 0)
         self.current_room = None
-        self.dungeon = Dungeon()
+        self.conn = self.get_conn()
+        self.dungeon = Dungeon(self.conn)
         self.pickler = Pickler()
         
         self.initialize_game()
         
-    def make_database(self):
-        self.conn = db.create_connection(r"SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql")
+    def get_conn(self):
+        return db.create_connection(r"SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql")
     
     def find_pickles(self):
         try: open('SOURCE_CODE_0307_VERSION_1/data/pickles/saved_dungeon.pickle')
@@ -33,7 +34,6 @@ class GameController:
         self.pickler.save_game(self.dungeon,self.hero,self.current_location)
     
     def initialize_game(self):
-        self.make_database()
         self.view = GameView(self)
         if self.find_pickles() and self.view.load_from_saved_game() == 1:
             self.dungeon, self.hero, self.current_location = self.pickler.load_game()
@@ -47,11 +47,11 @@ class GameController:
 
     def choose_hero(self,choice):
         if choice == 1:
-            self.hero = Warrior()
+            self.hero = Warrior(self.conn)
         elif choice == 2:
-            self.hero = Priestess()
+            self.hero = Priestess(self.conn)
         elif choice == 3:
-            self.hero = Thief()
+            self.hero = Thief(self.conn)
         else:
             self.view.display_message("Invalid choice! Please select a valid hero class.")
             return

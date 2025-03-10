@@ -5,10 +5,11 @@ from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster_factory import Mo
 from SOURCE_CODE_0307_VERSION_1.model.items.pillar_factory import PillarFactory
 
 class Dungeon:
-    def __init__(self, width=5, height=5):
+    def __init__(self, db_conn, width=5, height=5):
+        self.conn = db_conn
         self.__width = width
         self.__height = height
-        self.monster_factory = MonsterFactory()
+        self.monster_factory = MonsterFactory(self.conn)
         self.pillar_factory = PillarFactory()
         self.__grid = np.array([[Room(self.monster_factory,self.pillar_factory) for _ in range(width)] for _ in range(height)])
         self.set_entrance_exit()
