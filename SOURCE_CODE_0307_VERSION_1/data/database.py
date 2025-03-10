@@ -10,11 +10,16 @@ if db_dir and not os.path.exists(db_dir):
     os.makedirs(db_dir)
 
 class DatabaseManager:
+    """Manages the database connection for the game."""
     _instance = None  # Class-level variable to store the single connection
 
     @staticmethod
     def get_connection():
-        """Return the existing database connection, or create a new one if it doesn't exist."""
+        """Return the existing database connection, or create a new one if it doesn't exist.
+
+        Returns:
+            sqlite3.Connection: The database connection object.
+        """
         if DatabaseManager._instance is None:
             DatabaseManager._instance = sqlite3.connect(database_path)
             print("✅ Single database connection established.")
@@ -29,9 +34,15 @@ class DatabaseManager:
             DatabaseManager._instance = None  # Reset instance
 
 
-
 def create_connection(db_file):
-    """Create a database connection to the SQLite database."""
+    """Create a database connection to the SQLite database.
+
+    Args:
+        db_file (str): The path to the database file.
+
+    Returns:
+        sqlite3.Connection: The database connection object, or None if an error occurred.
+    """
     try:
         conn = sqlite3.connect(db_file)
         print("✅ Database connection established.")
@@ -42,7 +53,11 @@ def create_connection(db_file):
 
 
 def create_tables(conn):
-    """Create monsters and heroes tables if they do not exist."""
+    """Create monsters and heroes tables if they do not exist.
+
+    Args:
+        conn (sqlite3.Connection): The database connection object.
+    """
     try:
         cursor = conn.cursor()
 
@@ -86,7 +101,11 @@ def create_tables(conn):
 
 
 def initialize_monsters(conn):
-    """Insert default monsters into the database if the table is empty."""
+    """Insert default monsters into the database if the table is empty.
+
+    Args:
+        conn (sqlite3.Connection): The database connection object.
+    """
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM monsters")
@@ -112,7 +131,11 @@ def initialize_monsters(conn):
 
 
 def initialize_heroes(conn):
-    """Insert hero classes into the database if the table is empty."""
+    """Insert hero classes into the database if the table is empty.
+
+    Args:
+        conn (sqlite3.Connection): The database connection object.
+    """
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM heroes")
@@ -131,7 +154,11 @@ def initialize_heroes(conn):
 
 
 def get_all_monsters(conn):
-    """Fetch all monsters from the database."""
+    """Fetch all monsters from the database.
+
+    Args:
+        conn (sqlite3.Connection): The database connection object.
+    """
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM monsters")
@@ -147,7 +174,11 @@ def get_all_monsters(conn):
 
 
 def get_all_heroes(conn):
-    """Fetch all heroes from the database."""
+    """Fetch all heroes from the database.
+
+    Args:
+        conn (sqlite3.Connection): The database connection object.
+    """
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM heroes")
@@ -186,4 +217,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

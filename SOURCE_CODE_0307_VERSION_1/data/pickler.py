@@ -3,7 +3,10 @@ import os
 
 
 class Pickler:
+    """Class to handle saving and loading game state using pickle."""
+
     def __init__(self):
+        """Initialize the Pickler with a directory to store pickle files."""
         self.prefix = 'SOURCE_CODE_0307_VERSION_1/data/pickles'
         os.makedirs(self.prefix, exist_ok=True)  # Ensure the directory exists
 
@@ -11,9 +14,9 @@ class Pickler:
         """Serializes a dungeon and hero object into their respective binary files.
 
         Args:
-            dungeon: Dungeon object
-            hero: Hero object
-            location: Tuple representing the hero's location
+            dungeon: Dungeon object to be saved.
+            hero: Hero object to be saved.
+            location: Tuple representing the hero's location to be saved.
         """
         with open(f"{self.prefix}/saved_dungeon.pickle", 'wb') as file:
             pickle.dump(dungeon, file)
@@ -40,6 +43,7 @@ class Pickler:
         with open(f"{self.prefix}/saved_location.pickle", 'rb') as file:
             location = pickle.load(file)
 
+        # Remove the pickle files after loading to prevent reloading the same state
         os.remove(f"{self.prefix}/saved_dungeon.pickle")
         os.remove(f"{self.prefix}/saved_hero.pickle")
         os.remove(f"{self.prefix}/saved_location.pickle")
@@ -50,17 +54,20 @@ class Pickler:
 if __name__ == '__main__':
     # Mock dungeon to test
     class FakeDungeon:
+        """A mock class to simulate a Dungeon object for testing purposes."""
         def __init__(self):
             self.name = 'PICKLED DUNGEON'
 
 
     class FakeHero:
+        """A mock class to simulate a Hero object for testing purposes."""
         def __init__(self):
             self.health = 'some number'
             self.name = 'PICKLED HERO'
 
 
     def pickle_test():
+        """Function to test saving game state."""
         d = FakeDungeon()
         h = FakeHero()
         l = (2, 6)
@@ -69,6 +76,7 @@ if __name__ == '__main__':
 
 
     def depickle_test():
+        """Function to test loading game state."""
         dungeon, hero, location = Pickler().load_game()
         print(dungeon.name)
         print(hero.name, hero.health)
