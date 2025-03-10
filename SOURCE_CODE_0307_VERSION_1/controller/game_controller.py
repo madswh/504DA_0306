@@ -13,9 +13,9 @@ class GameController:
     def __init__(self):
         self.hero = None
         self.view = None
-        self.current_location = (0, 0)  # Starting position.
+        self.current_location = (0, 0)
         self.current_room = None
-        self.dungeon = Dungeon() # Initialize the Dungeon.
+        self.dungeon = Dungeon()
         self.pickler = Pickler()
         
         self.initialize_game()
@@ -28,6 +28,9 @@ class GameController:
         except FileNotFoundError as e:
             if e: return False
             return True
+    
+    def save_game(self):
+        self.pickler.save_game(self.dungeon,self.hero,self.current_location)
     
     def initialize_game(self):
         self.make_database()
@@ -77,9 +80,9 @@ class GameController:
                 if self.current_room.monster:    # Ensure there's a monster to attack.
                     battle = Battle(self,self.view)
                     result = battle.battle()
-                    if result == 'Forfeit': continue
-                    elif result == True: continue
-                    else: break
+                    if result == 'Forfeit': continue #the hero backed outa the battle
+                    elif result == True: continue #the hero defeated the monster
+                    else: break #the monster killed the hero
                 else:
                     self.view.display_message("There's no monster to attack!")
             
@@ -88,7 +91,8 @@ class GameController:
                 
             elif action == 4: # Quit.
                 if self.view.confirm_quit():
-                    self.view.display_message("Thank you for playing!")
+                    self.view.display_message("Thank you for playing!\n\n...saving game for later use...")
+                    self.save_game()
                     break
             else:
                 self.view.display_message("Invalid action! Please choose Move, Attack, Use Potion, or Quit.")

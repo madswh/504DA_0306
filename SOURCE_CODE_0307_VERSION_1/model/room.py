@@ -5,7 +5,7 @@ from SOURCE_CODE_0307_VERSION_1.model.items.other_potion import OtherPotion
 from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.environmental_element import EnvironmentalElement
 
 class Room:
-    def __init__(self, monster_factory, initialize_contents=True):
+    def __init__(self, monster_factory, pillar_factory, initialize_contents=True):
         self.__has_healing_potion = False
         self.__has_vision_potion = False
         self.__has_other_potion = None
@@ -16,6 +16,7 @@ class Room:
 
         self.__pillar = None
         self.__monster_factory = monster_factory
+        self.__pillar_factory = pillar_factory
         self.__monster = None
 
         self.__items = []               # Initialize the items list.
@@ -139,7 +140,7 @@ class Room:
 
         # Ensure pit is not in the same room as pillar and monsters.
         if random.random() < 1 and not self.__has_pit:
-            self.__pillar = Pillar(random.choice(['A', 'E', 'I', 'P']))
+            self.__pillar = self.__pillar_factory.place_pillar()
             self.__monster = self.__monster_factory.create_monster()
             self.__items.append(self.__monster)
 

@@ -2,13 +2,15 @@ import numpy as np
 from collections import deque
 from SOURCE_CODE_0307_VERSION_1.model.room import Room
 from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster_factory import MonsterFactory
+from SOURCE_CODE_0307_VERSION_1.model.items.pillar_factory import PillarFactory
 
 class Dungeon:
     def __init__(self, width=5, height=5):
         self.__width = width
         self.__height = height
         self.monster_factory = MonsterFactory()
-        self.__grid = np.array([[Room(self.monster_factory) for _ in range(width)] for _ in range(height)])
+        self.pillar_factory = PillarFactory()
+        self.__grid = np.array([[Room(self.monster_factory,self.pillar_factory) for _ in range(width)] for _ in range(height)])
         self.set_entrance_exit()
 
     @property
