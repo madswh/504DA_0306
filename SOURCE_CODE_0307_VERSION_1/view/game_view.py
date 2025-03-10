@@ -77,12 +77,17 @@ class GameView:
     # def display_monster_attack(self, monster, damage):
     #     print(f"\n{monster.name} attacks you for {damage} damage!")
 
-    def get_player_action(self):
+    def get_player_action(self,battle=False):
         while True:
-            action = int(input('''\nPlease choose an action:\n1. Move\n2. Attack\n3. Use Potion\n4. Quit\n'''))
-            if action in [1,2,3,4]: return action
-            print("Invalid action! Please choose 1 (Move), 2 (Attack), 3 (Use Potion), or 4 (Quit).")
-
+            if not battle:
+                action = int(input('''\nPlease choose an action:\n1. Move\n2. Attack\n3. Use Potion\n4. Quit\n'''))
+                if action in [1,2,3,4]: return action
+                print("Invalid action! Please choose 1 (Move), 2 (Attack), 3 (Use Potion), or 4 (Quit).")
+            else:
+                action = int(input('''\nPlease choose an action:\n1. Attack\n2. Use Potion\n3. Quit Battle\n'''))
+                if action in [1,2,3]: return action
+                print("Invalid action! Please choose 1 (Attack), 2 (Use Potion), 3 (Quit Battle).")
+               
     def get_move_direction(self):
         print("Please choose a direction:")
         print("1. North (N)")

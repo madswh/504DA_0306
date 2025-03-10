@@ -1,6 +1,3 @@
-
-
-
 from abc import ABC, abstractmethod
 
 # BASE CLASS FOR ALL TYPES OF ITEMS

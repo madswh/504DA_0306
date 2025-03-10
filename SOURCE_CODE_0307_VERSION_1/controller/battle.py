@@ -22,15 +22,15 @@ class Battle:
         self.report(string)
 
         while self.hero.hit_points > 0:
-            choice = self.view.get_player_action()
+            choice = self.view.get_player_action(battle=True)
             if choice == 1:
-                self.controller.move_adventurer(self.view.get_move_direction())
-                return 'Forfeit'
-            if choice == 2:
                 if self.hero.attack(self.monster): string = f'{self.hero.name} attacked {self.monster.name}.'
                 else: string = f'{self.hero.name} failed to attack {self.monster.name}.'
-            if choice == 3: 
+            if choice == 2: 
                 self.controller.use_potion(self.view.get_potion_type())
+            if choice == 3:
+                self.report('You decided to forfeit the battle.')
+                return 'Forfeit'
             self.report(string)
             
             monster_choice = random.choice([True,False])
