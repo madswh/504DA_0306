@@ -1,6 +1,7 @@
 from SOURCE_CODE_0307_VERSION_1.view.game_view import GameView
 import random
 
+
 class Battle:
     """Class to handle the battle logic between the hero and the monster."""
 
@@ -27,6 +28,23 @@ class Battle:
         """
         self.view.display_message(message)
 
+    def get_valid_player_choice(self):
+        """
+        Get and validate the player's choice during battle.
+
+        Returns:
+            int: A valid choice (1: Attack, 2: Use Potion, 3: Forfeit).
+        """
+        while True:
+            try:
+                choice = self.view.get_player_action(battle=True)
+                if choice in [1, 2, 3]:
+                    return choice
+                else:
+                    self.report("Invalid choice. Please enter 1 (Attack), 2 (Use Potion), or 3 (Forfeit).")
+            except ValueError:
+                self.report("Invalid input. Please enter a number.")
+
     def battle(self):
         """
         Handle the battle logic between the hero and the monster.
@@ -44,29 +62,32 @@ class Battle:
         self.report(string)
 
         while self.hero.hit_points > 0:
-            choice = self.view.get_player_action(battle=True)
+            choice = self.get_valid_player_choice()
+
             if choice == 1:
                 if self.hero.attack(self.monster):
                     string = f'{self.hero.name} attacked {self.monster.name}.'
                 else:
                     string = f'{self.hero.name} failed to attack {self.monster.name}.'
-            if choice == 2:
+            elif choice == 2:
                 self.controller.use_potion(self.view.get_potion_type())
-            if choice == 3:
+                string = f'{self.hero.name} used a potion.'
+            elif choice == 3:
                 self.report('You decided to forfeit the battle.')
                 return 'Forfeit'
+
             self.report(string)
 
-            monster_choice = random.choice([True, False])
-            if monster_choice:
-                if self.monster.attack(self.hero):
-                    string = f'{self.monster.name} attacked you.'
+            if self.monster.hit_points > 0:
+                if random.choice([True, False]):
+                    if self.monster.attack(self.hero):
+                        string = f'{self.monster.name} attacked you.'
+                    else:
+                        string = f'{self.monster.name} tried to attack you, but failed.'
                 else:
-                    string = f'{self.monster.name} tried to attack you, but failed.'
-            else:
-                if self.monster.heal():
-                    string = f'{self.monster.name} healed.'
-            self.report(string)
+                    if self.monster.heal():
+                        string = f'{self.monster.name} healed.'
+                self.report(string)
 
             if self.monster.hit_points <= 0:
                 self.view.someone_died(self.monster, 0)
