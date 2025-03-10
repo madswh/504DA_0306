@@ -27,7 +27,7 @@ class GameController:
         try: open('SOURCE_CODE_0307_VERSION_1/data/pickles/saved_dungeon.pickle')
         except FileNotFoundError as e:
             if e: return False
-            return True
+        return True
     
     def save_game(self):
         self.pickler.save_game(self.dungeon,self.hero,self.current_location)
