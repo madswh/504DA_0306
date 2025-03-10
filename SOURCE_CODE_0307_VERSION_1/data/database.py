@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 # Define the database file path
-database_path = "SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql"
+database_path = "dungeon_game.sql"
 
 # Ensure the directory exists
 db_dir = os.path.dirname(database_path)
