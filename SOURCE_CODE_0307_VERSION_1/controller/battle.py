@@ -96,7 +96,7 @@ class Battle:
                 # Check if the room has a pillar, and collect it
                 if self.controller.current_room.pillar:
                     self.controller.collect_pillar()
-                    self.view.display_message(f'You collected the {self.controller.current_room.pillar.name} pillar!')
+                   # self.view.display_message(f'You collected the {self.controller.current_room.pillar.name} pillar!')
                 return True
 
             if self.hero.hit_points <= 0:
