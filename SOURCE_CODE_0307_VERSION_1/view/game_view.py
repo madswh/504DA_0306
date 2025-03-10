@@ -25,7 +25,7 @@ class GameView:
 
     def load_from_saved_game(self):
         return int(input ('''You have a previously saved game, would you like to 
-        continue from where you left off?\n1. Yes\n2. No'''))
+        continue from where you left off?\n1. Yes\n2. No\n'''))
         
     def enter_name(self):
         return input(f"\nPlease enter your name: ").strip()
