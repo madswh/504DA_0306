@@ -138,10 +138,15 @@ class Room:
             self.__is_exit = True
             self.__is_exit = EnvironmentalElement('O')
 
-        # Ensure pit is not in the same room as pillar and monsters.
         if random.random() < 1 and not self.__has_pit:
             self.__pillar = self.__pillar_factory.place_pillar()
-            self.__monster = self.__monster_factory.create_monster()
+
+            # If a pillar exists, spawn a boss monster
+            if self.__pillar:
+                self.__monster = self.__monster_factory.create_boss_monster()  # Boss monster for pillar rooms
+            else:
+                self.__monster = self.__monster_factory.create_monster()  # Regular monster otherwise
+
             self.__items.append(self.__monster)
 
         # Ensure pillar and monsters are not in the same room as pit.

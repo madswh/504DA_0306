@@ -64,11 +64,15 @@ class Battle:
         while self.hero.hit_points > 0:
             choice = self.get_valid_player_choice()
 
-            if choice == 1:
+            if choice == 1:  # Player chooses to attack
                 if self.hero.attack(self.monster):
                     string = f'{self.hero.name} attacked {self.monster.name}.'
+                    self.report(string)
+                    self.report(f"{self.monster.name} now has {self.monster.hit_points} HP remaining.")
                 else:
                     string = f'{self.hero.name} failed to attack {self.monster.name}.'
+                    self.report(string)
+
             elif choice == 2:
                 self.controller.use_potion(self.view.get_potion_type())
                 string = f'{self.hero.name} used a potion.'
