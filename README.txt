@@ -93,4 +93,19 @@ Day 7:
    - Continued finalizing the SRS.
    - Continued working on the initial draft for project presentation slides.
 
+Sources:
+
+- Assignment guidelines and outline prepared by Professor Tom Capaul.  
+- Team discussions via Discord and collaborative task progress tracking through the GitHub repository and YouTrack project management.  
+- TCSS 502 Assignment 5: Putting it All Together - Dungeon Adventure!  
+- TCSS 504 Course Project: Trivia Maze, Dungeon Adventure 2.0, or File Watcher.  
+- [SRS Templates] TCSS 504 Software Requirements and Specifications (SRS) Assignment.  
+- Zoom lecture recordings and class modules prepared by Professor Tom Capaul.  
+- Git and GitHub Documentation.  
+- YouTrack Documentation.  
+- Class modules by Mr. Kevin Anderson.  
+- Class modules by Professor Varik Hoang.  
+- Class modules by Professor Robert Cordingly.  
+- [Python Enhancement Proposal (PEP) process. GitHub public domain.] https://github.com/python/peps/tree/main  
+
 
