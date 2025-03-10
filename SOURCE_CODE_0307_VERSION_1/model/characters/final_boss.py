@@ -1,6 +1,7 @@
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster import Monster
+from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
+import random
 
-class FinalBoss(Monster):
+class FinalBoss(BossMonster):
     """Final Boss that guards the exit after collecting all pillars."""
 
     def __init__(self, conn):
@@ -9,8 +10,7 @@ class FinalBoss(Monster):
         Args:
             conn: Database connection.
         """
-        super().__init__()
-        self.conn = conn
+        super().__init__(conn)  # Call BossMonster's constructor
         self.fill_stats()
 
     def fill_stats(self):

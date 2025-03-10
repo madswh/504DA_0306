@@ -25,6 +25,7 @@ class MonsterFactory:
             raise Exception("No boss monsters found in the database!")
 
         boss_name = random.choice(boss_names)  # Pick a random boss
+        ##CHANGE THIS! Add final boss after collecting 3 pillars
 
         # Return the corresponding boss monster object
         if boss_name == "Ogre Boss":
