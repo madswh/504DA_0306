@@ -54,6 +54,7 @@ Day 2:
    - Downloaded a copy of the repo. 
    - Tried to rewrite the controller and battle mechanics to fit the console-based UI.
    - Separated code into directories.
+   - Created functions for saving a game and loading a game.
    - Continued to work on synchronizing class relationships and functionalities to ensure the program is playable according to the team’s game design and mechanics.
 
 Day 3:
@@ -89,9 +90,19 @@ Day 6:
 
 Day 7:
    - Continued reviews and verification of each other's work, discussing project improvements via Discord.  
+   - Made a pillar factory to eliminate duplicate pillar spawns.
    - Tweaked battle mechanics to fit class capabilities.
+   - The database made one connection.
+   - Check appeared 100 times; it should be once when the game started.
+   - While working on the database, tried saving the game, noticed an error, and added an explicit check for existence.
+   - Played the game and identified bugs.
+   - While playing the game, identified bugs and created stories about them.
+   - Created doc strings.
+   - Added Boss Monster Mechanic.
+   - The hero didn't acquire the pillar after the battle was won.
    - Continued finalizing the SRS.
    - Continued working on the initial draft for project presentation slides.
+   - Prepared the final formal iteration deliverables and conducted preliminary unit tests.
 
 Sources:
 
@@ -107,5 +118,3 @@ Sources:
 - Class modules by Professor Varik Hoang.  
 - Class modules by Professor Robert Cordingly.  
 - [Python Enhancement Proposal (PEP) process. GitHub public domain.] https://github.com/python/peps/tree/main  
-
-
