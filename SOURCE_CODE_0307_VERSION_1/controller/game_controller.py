@@ -259,5 +259,15 @@ class GameController:
         else:
             self.view.display_message("Invalid choice or no potions left.")
 
+    def collect_pillar(self):
+        """
+        Collect the pillar from the current room and add it to the hero's inventory.
+        """
+        pillar = self.current_room.pillar
+        self.hero.pillars.append(pillar)  # Add to hero's inventory
+        self.view.display_message(f"You have collected the {pillar} pillar!")
+        self.current_room.pillar = None  # Remove from the room
+
+
 if __name__ == "__main__":
     game_controller = GameController()
