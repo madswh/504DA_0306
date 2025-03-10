@@ -137,11 +137,11 @@ class Room:
             self.__is_exit = True
             self.__is_exit = EnvironmentalElement('O')
 
-        # Ensure pit is not in the same room as pillar and monsters.
-        if random.random() < 1 and not self.__has_pit:
-            self.__pillar = Pillar(random.choice(['A', 'E', 'I', 'P']))
-            self.__monster = self.__monster_factory.create_monster()
-            self.__items.append(self.__monster)
+        # # Ensure pit is not in the same room as pillar and monsters.
+        # if random.random() < 1 and not self.__has_pit:
+        #     self.__pillar = Pillar(random.choice(['A', 'E', 'I', 'P']))
+        #     self.__monster = self.__monster_factory.create_monster()
+        #     self.__items.append(self.__monster)
 
         # Ensure pillar and monsters are not in the same room as pit.
         if random.random() < 0.5 and not self.__pillar and not self.__monster:
