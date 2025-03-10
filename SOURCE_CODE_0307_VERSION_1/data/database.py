@@ -9,6 +9,26 @@ db_dir = os.path.dirname(database_path)
 if db_dir and not os.path.exists(db_dir):
     os.makedirs(db_dir)
 
+class DatabaseManager:
+    _instance = None  # Class-level variable to store the single connection
+
+    @staticmethod
+    def get_connection():
+        """Return the existing database connection, or create a new one if it doesn't exist."""
+        if DatabaseManager._instance is None:
+            DatabaseManager._instance = sqlite3.connect(database_path)
+            print("✅ Single database connection established.")
+        return DatabaseManager._instance
+
+    @staticmethod
+    def close_connection():
+        """Close the database connection when the game ends."""
+        if DatabaseManager._instance:
+            DatabaseManager._instance.close()
+            print("✅ Database connection closed successfully.")
+            DatabaseManager._instance = None  # Reset instance
+
+
 
 def create_connection(db_file):
     """Create a database connection to the SQLite database."""
@@ -144,7 +164,7 @@ def get_all_heroes(conn):
 
 def main():
     """Main function to set up the database and insert initial data."""
-    conn = create_connection(database_path)
+    conn = DatabaseManager.get_connection()
 
     if conn is not None:
         try:
