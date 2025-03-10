@@ -26,14 +26,13 @@ class Priestess(Hero):
 
     def fill_stats(self):
         data = self.get_stats()
-        self.name = data[0]
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.chance_to_hit = data[4]
-        self.chance_to_block = data[5]
-        self.min_heal = data[6]
-        self.max_heal = data[7]
+        self.chance_to_hit = data[5]
+        self.chance_to_block = data[6]
+        self.min_heal = data[7]
+        self.max_heal = data[8]
     
     def attack(self, opponent):
         if self.can_hit():

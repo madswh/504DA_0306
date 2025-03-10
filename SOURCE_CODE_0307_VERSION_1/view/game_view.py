@@ -62,8 +62,13 @@ class GameView:
             print(f"Hit Points: {self.hero.hit_points}")
             print(f"Healing Potions: {self.hero.healing_potions}")
             print(f"Vision Potions: {self.hero.vision_potions}")
-            print(f"Pillars Found: {', '.join(self.hero.pillars) if self.hero.pillars else 'None'}")
+            print(f"Pillars Found: {[i.name_of_item for i in self.hero.pillars]}")
             print(f"--- End of Player Status ---\n")
+
+    def display_monster_status(self,monster):
+        print(f'\n---{monster.name} Status---')
+        print(f'Health: {monster.hit_points} points.')
+        print(f"--- End of {monster.name} Status ---\n")
 
     # def show_battle_result(self, attacker, defender, damage):
     #     print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")

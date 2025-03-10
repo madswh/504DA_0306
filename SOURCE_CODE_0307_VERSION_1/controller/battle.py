@@ -60,27 +60,25 @@ class Battle:
             else:
                 string = f'{self.hero.name} failed to attack {self.monster.name}.'
         self.report(string)
-
+ 
         while self.hero.hit_points > 0:
+            self.view.display_hero_status()
+            self.view.display_monster_status(self.monster)
             choice = self.get_valid_player_choice()
 
             if choice == 1:  # Player chooses to attack
                 if self.hero.attack(self.monster):
-                    string = f'{self.hero.name} attacked {self.monster.name}.'
-                    self.report(string)
+                    self.report(f'{self.hero.name} attacked {self.monster.name}.')
                     self.report(f"{self.monster.name} now has {self.monster.hit_points} HP remaining.")
-                else:
-                    string = f'{self.hero.name} failed to attack {self.monster.name}.'
-                    self.report(string)
+                else: self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
 
             elif choice == 2:
                 self.controller.use_potion(self.view.get_potion_type())
-                string = f'{self.hero.name} used a potion.'
+                self.report(f'{self.hero.name} used a potion.')
+                
             elif choice == 3:
                 self.report('You decided to forfeit the battle.')
                 return 'Forfeit'
-
-            self.report(string)
 
             if self.monster.hit_points > 0:
                 if random.choice([True, False]):
