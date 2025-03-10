@@ -2,6 +2,8 @@ import random
 from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
 from SOURCE_CODE_0307_VERSION_1.model.characters.gremlin import Gremlin
 from SOURCE_CODE_0307_VERSION_1.model.characters.skeleton import Skeleton
+from SOURCE_CODE_0307_VERSION_1.model.characters.final_boss import FinalBoss
+
 
 class MonsterFactory:
     def __init__(self,db_conn):
@@ -31,5 +33,5 @@ class MonsterFactory:
             return Gremlin(self.conn)
         elif boss_name == "Skeleton Boss":
             return Skeleton(self.conn)
-        # elif boss_name == "Final Boss":
-        #     return FinalBoss(self.conn)  # Add this line to return the FinalBoss object
+        elif boss_name == "Final Boss":
+            return FinalBoss(self.conn)  # Add this line to return the FinalBoss object
