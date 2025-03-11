@@ -14,14 +14,14 @@ class DatabaseManager:
     _instance = None  # Class-level variable to store the single connection
 
     @staticmethod
-    def get_connection():
+    def get_connection(filepath):
         """Return the existing database connection, or create a new one if it doesn't exist.
 
         Returns:
             sqlite3.Connection: The database connection object.
         """
         if DatabaseManager._instance is None:
-            DatabaseManager._instance = sqlite3.connect(database_path)
+            DatabaseManager._instance = sqlite3.connect(filepath)
             print("✅ Single database connection established.")
         return DatabaseManager._instance
 

@@ -49,17 +49,17 @@ class Battle:
         """
         Handle the battle logic between the hero and the monster.
         """
-        if random.choice([True, False]):
-            if self.monster.attack(self.hero):
-                string = f'{self.monster.name} attacked you.'
-            else:
-                string = f'{self.monster.name} tried to attack you, but failed.'
-        else:
-            if self.hero.attack(self.monster):
-                string = f'{self.hero.name} attacked {self.monster.name}.'
-            else:
-                string = f'{self.hero.name} failed to attack {self.monster.name}.'
-        self.report(string)
+        # if random.choice([True, False]):
+        #     if self.monster.attack(self.hero):
+        #         string = f'{self.monster.name} attacked you.'
+        #     else:
+        #         string = f'{self.monster.name} tried to attack you, but failed.'
+        # else:
+        #     if self.hero.attack(self.monster):
+        #         string = f'{self.hero.name} attacked {self.monster.name}.'
+        #     else:
+        #         string = f'{self.hero.name} failed to attack {self.monster.name}.'
+        # self.report(string)
  
         while self.hero.hit_points > 0:
             self.view.display_hero_status()
@@ -68,8 +68,7 @@ class Battle:
 
             if choice == 1:  # Player chooses to attack
                 if self.hero.attack(self.monster):
-                    self.report(f'{self.hero.name} attacked {self.monster.name}.')
-                    self.report(f"{self.monster.name} now has {self.monster.hit_points} HP remaining.")
+                    self.report(f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
                 else: self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
 
             elif choice == 2:
@@ -78,20 +77,19 @@ class Battle:
                 
             elif choice == 3:
                 self.report('You decided to forfeit the battle.')
-                return 'Forfeit'
+                break
 
             if self.monster.hit_points > 0:
                 if random.choice([True, False]):
                     if self.monster.attack(self.hero):
-                        string = f'{self.monster.name} attacked you.'
+                        string = f'{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.'
                     else:
                         string = f'{self.monster.name} tried to attack you, but failed.'
-                else:
-                    if self.monster.heal():
-                        string = f'{self.monster.name} healed.'
-                self.report(string)
+                elif self.monster.heal():
+                    string = f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
+                if string: self.report(string)
 
-            if self.monster.hit_points <= 0:
+            else:
                 self.view.someone_died(self.monster, 0)
                 self.controller.current_room.monster = None
 
@@ -99,8 +97,8 @@ class Battle:
                 if self.controller.current_room.pillar:
                     self.controller.collect_pillar()
                    # self.view.display_message(f'You collected the {self.controller.current_room.pillar.name} pillar!')
-                return True
+                break
 
             if self.hero.hit_points <= 0:
                 self.view.someone_died(self.hero, 1)
-                return False
+                break

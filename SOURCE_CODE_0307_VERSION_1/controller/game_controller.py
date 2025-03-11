@@ -6,7 +6,7 @@ from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
 from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
 from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
 from SOURCE_CODE_0307_VERSION_1.controller.battle import Battle
-import SOURCE_CODE_0307_VERSION_1.data.database as db
+from SOURCE_CODE_0307_VERSION_1.data.database import DatabaseManager
 from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 
 class GameController:
@@ -18,6 +18,7 @@ class GameController:
         self.view = None
         self.current_location = (0, 0)
         self.current_room = None
+        
         self.conn = self.get_conn()
         self.dungeon = Dungeon(self.conn)
         self.pickler = Pickler()
@@ -30,8 +31,22 @@ class GameController:
         Returns:
             sqlite3.Connection: The database connection object.
         """
-        return db.create_connection(r"SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql")
+        filepath = "SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql"
+        self.manager = DatabaseManager()
+        return self.manager.get_connection(filepath)
 
+    def scrub_all_conns(self):
+        '''delete all references to database connection bc the idiot pickler cant handle a db conn object 🙄.'''
+        self.conn = None
+        self.dungeon.conn = None
+        self.dungeon.monster_factory.conn = None
+        self.hero.conn = None
+        for row in self.dungeon.grid:
+            for room in row:
+                if room.monster:
+                    room.monster.conn = None
+        self.manager.close_connection()
+    
     def find_pickles(self):
         """Check if saved game files exist.
 
@@ -47,6 +62,7 @@ class GameController:
 
     def save_game(self):
         """Save the current game state using the Pickler."""
+        self.scrub_all_conns()
         self.pickler.save_game(self.dungeon, self.hero, self.current_location)
 
     def initialize_game(self):
@@ -54,6 +70,7 @@ class GameController:
         self.view = GameView(self)
         if self.find_pickles() and self.view.load_from_saved_game() == 1:
             self.dungeon, self.hero, self.current_location = self.pickler.load_game()
+            self.dungeon.conn = self.conn
         else:
             name = self.view.enter_name()
             self.choose_hero(self.view.choose_hero_class())
@@ -102,13 +119,8 @@ class GameController:
             elif action == 2:  # Attack.
                 if self.current_room.monster:  # Ensure there's a monster to attack.
                     battle = Battle(self, self.view)
-                    result = battle.battle()
-                    if result == 'Forfeit':
-                        continue  # The hero backed out of the battle.
-                    elif result == True:
-                        continue  # The hero defeated the monster.
-                    else:
-                        break  # The monster killed the hero.
+                    battle.battle()
+                    if self.hero.hit_points <= 0: break  # The monster killed the hero.
                 else:
                     self.view.display_message("There's no monster to attack!")
 
@@ -265,7 +277,7 @@ class GameController:
         """
         pillar = self.current_room.pillar
         self.hero.pillars.append(pillar)  # Add to hero's inventory
-        self.view.display_message(f"You have collected the {pillar} pillar!")
+        self.view.display_message(f"You have collected the {pillar.item_name} pillar!")
         self.current_room.pillar = None  # Remove from the room
 
 
