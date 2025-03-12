@@ -3,25 +3,24 @@ import random
 
 
 class MindLeech(Monster):
-    def __init__(self, db_conn):
+    def __init__(self, db_conn,boss=False):
         self.__name = 'Mind Leech'
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
-        self.__chance_to_hit = 0
-        self.__chance_to_heal = 0
         self.__min_heal = 0
         self.__max_heal = 0
-        self.__is_boss = 0
-        self.__flavor_text = ""
+        self.__chance_to_hit = 0
+        self.__chance_to_heal = 0
+        self.__is_boss = boss
+        self.__flavor_text = 0
         self.conn = db_conn
         self.fill_stats()
-
+        
     def get_stats(self):
         cursor = self.conn.cursor()
         data = []
-        for i in cursor.execute('SELECT * FROM monsters WHERE name =?', (self.name,)):
-            data.append(i)
+        for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name,self.is_boss)): data.append(i)
         return data[0]
 
     def fill_stats(self):
@@ -29,12 +28,12 @@ class MindLeech(Monster):
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.chance_to_hit = data[5]
-        self.chance_to_heal = data[6]
-        self.min_heal = data[7]
-        self.max_heal = data[8]
-        self.is_boss = data[9]
-        self.flavor_text = data[10]
+        self.min_heal = data[4]
+        self.max_heal = data[5]
+        self.chance_to_hit = data[6]
+        self.chance_to_heal = data[7]
+        self.is_boss = data[8]
+        self.flavor_text = data[9]
 
     def attack(self, opponent):
         if self.can_hit():
