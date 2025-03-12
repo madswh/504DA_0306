@@ -78,22 +78,24 @@ class Battle:
                 self.view.display_message(f"{self.monster.name} has been defeated!")
                 self.view.someone_died(self.monster, 0)
 
-                # ✅ if the monster is a boss, increment defeated bosses count
+                # ✅ If the monster is a boss, increment defeated bosses count
                 if self.monster.is_boss:
                     self.controller.defeated_bosses += 1  # Track boss defeats
 
-                # ✅ ensure the monster is removed properly
+                # ✅ Ensure the monster is removed properly
                 self.controller.current_room.monster = None
                 self.monster = None  # Prevent further actions on the monster
 
-                # ✅ if a pillar exists in this room, collect it
+                # ✅ If a pillar exists in this room, collect it
                 if self.controller.current_room.pillar:
                     self.controller.collect_pillar()
 
                 return  # Ensure the battle function exits immediately
 
-            # ✅ monster's turn if still alive
+            # ✅ Monster's turn if still alive
             if self.monster and self.monster.hit_points > 0:
+                string = ""  # ✅ Fix: Initialize string to avoid UnboundLocalError
+
                 if random.choice([True, False]):
                     if self.monster.attack(self.hero):
                         string = f'{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.'
@@ -102,7 +104,7 @@ class Battle:
                 elif self.monster.heal():
                     string = f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
 
-                if string:
+                if string:  # ✅ Now "string" will always be defined
                     self.report(string)
 
             # ✅ Ensure hero death is properly handled
