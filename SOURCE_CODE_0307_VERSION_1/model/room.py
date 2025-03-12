@@ -26,7 +26,7 @@ class Room:
 
         self.__is_visited = False  # Track if the room has been visited.
 
-        # Initialize door state whether it is open or close.
+        # Initialize door state whether it is open or closed.
         self.__north = random.choice([True, False])
         self.__east = random.choice([True, False])
         self.__west = random.choice([True, False])
@@ -43,12 +43,44 @@ class Room:
         self.__monster = monster
 
     @property
+    def has_vision_potion(self):
+        return self.__has_vision_potion
+
+    @has_vision_potion.setter
+    def has_vision_potion(self, has_vision_potion):
+        self.__has_vision_potion = has_vision_potion
+
+    @property
+    def has_other_potion(self):
+        return self.__has_other_potion
+
+    @has_other_potion.setter
+    def has_other_potion(self, has_other_potion):
+        self.__has_other_potion = has_other_potion
+
+    @property
+    def has_healing_potion(self):
+        return self.__has_healing_potion
+
+    @has_healing_potion.setter
+    def has_healing_potion(self, has_healing_potion):
+        self.__has_healing_potion = has_healing_potion
+
+    @property
     def pillar(self):
         return self.__pillar
 
     @pillar.setter
     def pillar(self, pillar):
         self.__pillar = pillar
+
+    @property
+    def has_pit(self):
+        return self.__has_pit
+
+    @has_pit.setter
+    def has_pit(self, has_pit):
+        self.__has_pit = has_pit
 
     def initialize_room_contents(self):
         """
@@ -69,8 +101,8 @@ class Room:
             self.__pillar = self.__pillar_factory.place_pillar()
 
             if self.__pillar:
-                # ✅ Boss spawns in pillar rooms
-                self.__monster = self.__monster_factory.create_boss_monster()
+                # ✅ Boss spawns in pillar rooms, passing `defeated_bosses`
+                self.__monster = self.__monster_factory.create_boss_monster(defeated_bosses=len(self.__monster_factory.defeated_bosses))
             else:
                 self.__monster = self.__monster_factory.create_monster()
 
@@ -149,19 +181,20 @@ class Room:
             f"\nRoom Features:\n{features_str}"
         )
 
+
 # Test Case for Functionality:
-if __name__ == '__main__':
-    class MockMonsterFactory:
-        def create_boss_monster(self): return None
-        def create_monster(self): return None
-        def create_final_boss(self): return None
-        defeated_bosses = set()
-
-    class MockPillarFactory:
-        def place_pillar(self): return None
-
-    mock_monster_factory = MockMonsterFactory()
-    mock_pillar_factory = MockPillarFactory()
-
-    room = Room(mock_monster_factory, mock_pillar_factory)
-    print(room)
+# if __name__ == '__main__':
+#     class MockMonsterFactory:
+#         def create_boss_monster(self, defeated_bosses=0): return None
+#         def create_monster(self): return None
+#         def create_final_boss(self): return None
+#         defeated_bosses = set()
+#
+#     class MockPillarFactory:
+#         def place_pillar(self): return None
+#
+#     mock_monster_factory = MockMonsterFactory()
+#     mock_pillar_factory = MockPillarFactory()
+#
+#     room = Room(mock_monster_factory, mock_pillar_factory)
+#     print(room)

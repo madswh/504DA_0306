@@ -1,4 +1,5 @@
 import random
+import os
 from SOURCE_CODE_0307_VERSION_1.view.game_view import GameView
 from SOURCE_CODE_0307_VERSION_1.model.dungeon import Dungeon
 from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
@@ -34,7 +35,10 @@ class GameController:
         Returns:
             sqlite3.Connection: The database connection object.
         """
-        filepath = "dungeon_game.sql"
+        # ✅ Ensure the database is always accessed from the correct location
+        filepath = os.path.join(os.path.dirname(__file__), "../data/dungeon_game.sql")
+        filepath = os.path.abspath(filepath)  # Convert to absolute path
+
         self.manager = DatabaseManager()
         return self.manager.get_connection(filepath)
 
@@ -79,6 +83,22 @@ class GameController:
             self.hero.name = f'{name} the {self.hero.name}'
         self.view.hero = self.hero
         self.play()
+
+    def check_for_potions(self, current_room):
+        """Check if the current room contains potions and update the hero's inventory.
+
+        Args:
+            current_room: The current room object.
+        """
+        if current_room.has_healing_potion:
+            self.hero.healing_potions += 1
+            current_room.has_healing_potion = False
+            self.view.display_message("\nYou collected a Healing Potion!")
+
+        if current_room.has_vision_potion:
+            self.hero.vision_potions += 1
+            current_room.has_vision_potion = False
+            self.view.display_message("\nYou collected a Vision Potion!")
 
     def choose_hero(self, choice):
         """Choose the hero class based on user input.
@@ -148,6 +168,30 @@ class GameController:
                 self.view.display_message(
                     "Congratulations! You've defeated the Final Boss and escaped the dungeon. You win!")
                 break
+
+    def handle_pits(self, current_room):
+        """Handle pits found in the current room.
+
+        Args:
+            current_room: The current room object.
+        """
+        if current_room.has_pit:
+            pit_damage = random.randint(20, 50)
+            self.hero.hit_points -= pit_damage
+            current_room.has_pit = False
+            self.view.display_message(f"\nYou fell into a pit and took {pit_damage} damage!")
+
+    def handle_other_potions(self, current_room):
+        """Handle other types of potions found in the current room."""
+        if current_room.has_other_potion:
+            potion_effect = self.hero.handle_other_potion(
+                current_room.has_other_potion.name_of_item,
+                current_room.monster.name if current_room.monster else None
+            )
+            self.view.display_message(f"\nYou found a {current_room.has_other_potion.name_of_item} Potion!")
+            self.view.display_message(potion_effect)
+            current_room.has_other_potion = None  # Remove the potion from the room
+
 
     def move_adventurer(self, direction):
         """Move the adventurer in the specified direction.
