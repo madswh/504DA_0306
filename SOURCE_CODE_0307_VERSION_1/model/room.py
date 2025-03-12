@@ -85,7 +85,6 @@ class Room:
     def initialize_room_contents(self):
         """
         ✅ Ensure a boss monster guards each pillar.
-        ✅ The Final Boss spawns **ONLY** in the exit room **AFTER** defeating all 4 bosses.
         """
         # ✅ Assign entrance and exit first
         if random.random() < 1 and not self.__is_exit:
@@ -107,10 +106,6 @@ class Room:
                 self.__monster = self.__monster_factory.create_monster()
 
             self.__items.append(self.__monster)
-
-        # ✅ If this is the exit room and all 4 pillars are collected, spawn the **Final Boss**
-        if self.__is_exit and len(self.__monster_factory.defeated_bosses) == 4:
-            self.__monster = self.__monster_factory.create_final_boss()
 
         # ✅ Ensure a pillar and a monster are NOT in a pit room
         if random.random() < 0.5 and not self.__pillar and not self.__monster:
