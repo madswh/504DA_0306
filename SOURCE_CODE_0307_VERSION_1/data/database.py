@@ -14,7 +14,7 @@ class DatabaseManager:
     _instance = None  # Class-level variable to store the single connection
 
     @staticmethod
-    def get_connection(filepath):
+    def get_connection(filepath="dungeon_game.sql"):
         """Return the existing database connection, or create a new one if it doesn't exist.
 
         Returns:
@@ -101,11 +101,7 @@ def create_tables(conn):
 
 
 def initialize_monsters(conn):
-    """Insert default monsters into the database if the table is empty.
-
-    Args:
-        conn (sqlite3.Connection): The database connection object.
-    """
+    """Insert default monsters into the database if the table is empty."""
     try:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM monsters")
@@ -114,14 +110,19 @@ def initialize_monsters(conn):
                 ("Ogre", 200, 30, 60, 2, 0.6, 0.1, 30, 60, False, ""),
                 ("Gremlin", 70, 15, 30, 5, 0.8, 0.4, 20, 40, False, ""),
                 ("Skeleton", 100, 30, 50, 3, 0.8, 0.3, 30, 50, False, ""),
+                ("Mind Leech", 120, 20, 45, 4, 0.75, 0.3, 25, 45, False, ""),
+
                 ("Ogre Boss", 500, 80, 120, 1, 0.7, 0.1, 50, 100, True,
-                 "This Ogre isn't just strong—it's a force of nature! Guarding the Pillar of Encapsulation."),
+                 "The Ogre is more than muscle and rage—it is inevitability. A walking landslide, a storm given flesh. Bones will break, steel will bend, and nothing you know will protect you from the brute force of its will."),
                 ("Gremlin Boss", 150, 40, 60, 5, 0.9, 0.5, 40, 60, True,
-                 "The Gremlin has mastered the Pillar of Inheritance, and it'll make you pay for trying to take it!"),
+                 "The Gremlin is a master of bloodlines and stolen legacies. It twists strength from those who came before, growing fiercer with every battle. You dared to challenge it—now suffer the wrath of a creature that inherits every advantage."),
                 ("Skeleton Boss", 250, 50, 80, 3, 0.85, 0.4, 50, 80, True,
-                 "The Skeleton knows everything about Polymorphism—and now it's time to face the consequences!"),
+                 "The Skeleton has mastered the art of becoming many while remaining one. It shifts, reforms, and strikes from everywhere at once. You’ve entered its domain—now learn what it means to fight a foe that is never the same twice."),
+                ("Mind Leech Boss", 300, 60, 100, 4, 0.85, 0.4, 60, 90, True,
+                 "The Mind Leech does not strike with claws or fangs—it burrows deep, unraveling reality thread by thread. Shadows whisper, memories turn against you, and the battlefield itself bends to its will. This is not just a fight. This is a descent into madness."),
+
                 ("Final Boss", 1000, 100, 150, 1, 0.8, 0.2, 100, 150, True,
-                 "You have demonstrated incredible determination to reach this point. But can you defeat the Final Boss?"),
+                 "You have fought, bled, and defied the odds to stand here. But strength alone is not enough. The Final Boss awaits—not just as an enemy, but as the ultimate question: Can you overcome the very limits that brought you this far? This is not just a battle. This is your reckoning."),
             ]
             cursor.executemany("INSERT INTO monsters VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", monsters_data)
             conn.commit()
@@ -141,9 +142,9 @@ def initialize_heroes(conn):
         cursor.execute("SELECT COUNT(*) FROM heroes")
         if cursor.fetchone()[0] == 0:
             heroes_data = [
-                ("Warrior", 2000, 30, 60, 2, 0.6, 0.1, 30, 60, "Shield Block - Reduces damage from attacks"),
-                ("Thief", 700, 15, 30, 5, 0.8, 0.4, 20, 40, "Surprise Attack - Chance to gain an extra turn"),
-                ("Priestess", 1000, 30, 50, 3, 0.8, 0.3, 30, 50,
+                ("Warrior", 20000, 30, 60, 2, 0.6, 0.1, 30, 60, "Shield Block - Reduces damage from attacks"),
+                ("Thief", 70000, 15, 30, 5, 0.8, 0.4, 20, 40, "Surprise Attack - Chance to gain an extra turn"),
+                ("Priestess", 10000, 30, 50, 3, 0.8, 0.3, 30, 50,
                  "Healing Touch - Heals the Priestess for a random amount of HP"),
             ]
             cursor.executemany("INSERT INTO heroes VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", heroes_data)

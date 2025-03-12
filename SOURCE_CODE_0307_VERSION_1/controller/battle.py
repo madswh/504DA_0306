@@ -78,17 +78,21 @@ class Battle:
                 self.view.display_message(f"{self.monster.name} has been defeated!")
                 self.view.someone_died(self.monster, 0)
 
-                # ✅ Ensure the monster is removed properly
+                # ✅ if the monster is a boss, increment defeated bosses count
+                if self.monster.is_boss:
+                    self.controller.defeated_bosses += 1  # Track boss defeats
+
+                # ✅ ensure the monster is removed properly
                 self.controller.current_room.monster = None
                 self.monster = None  # Prevent further actions on the monster
 
-                # ✅ If a pillar exists in this room, collect it
+                # ✅ if a pillar exists in this room, collect it
                 if self.controller.current_room.pillar:
                     self.controller.collect_pillar()
 
                 return  # Ensure the battle function exits immediately
 
-            # ✅ Monster's turn if still alive
+            # ✅ monster's turn if still alive
             if self.monster and self.monster.hit_points > 0:
                 if random.choice([True, False]):
                     if self.monster.attack(self.hero):
