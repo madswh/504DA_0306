@@ -70,6 +70,15 @@ class GameView:
         print(f'Health: {monster.hit_points} points.')
         print(f"--- End of {monster.name} Status ---\n")
 
+    def display_both_stats(self,opponent):
+        if opponent:
+            print(f"\n              {self.hero.name} Status       {opponent.name} Status")
+            print(f'Hit Points:         {self.hero.hit_points}                         {opponent.hit_points}')
+            print(f'Healing Potions:    {self.hero.healing_potions}')
+            print(f'Vision Potions:     {self.hero.vision_potions}')
+            print(f'Pillars found:      {[i.name_of_item for i in self.hero.pillars]}')
+        
+    
     # def show_battle_result(self, attacker, defender, damage):
     #     print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")
     #     print(f"\n--- Current HP Status ---")
@@ -89,9 +98,9 @@ class GameView:
                 if action in [1,2,3,4]: return action
                 print("Invalid action! Please choose 1 (Move), 2 (Battle), 3 (Use Potion), or 4 (Quit).")
             else:
-                action = int(input('''\nPlease choose an action:\n1. Attack\n2. Use Potion\n3. Quit Battle\n'''))
-                if action in [1,2,3]: return action
-                print("Invalid action! Please choose 1 (Attack), 2 (Use Potion), 3 (Quit Battle).")
+                action = int(input(f'''\nPlease choose an action:\n1. Attack\n2. Use Potion\n3. Use Special Skill ({self.hero.skill_name})\n4. Quit Battle\n'''))
+                if action in [1,2,3,4]: return action
+                print("Invalid action! Please choose 1 (Attack), 2 (Use Potion), 3 (Use Skill) 4 (Quit Battle).")
                
     def get_move_direction(self):
         print("Please choose a direction:")

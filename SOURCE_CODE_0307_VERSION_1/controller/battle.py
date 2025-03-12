@@ -1,4 +1,7 @@
 from SOURCE_CODE_0307_VERSION_1.view.game_view import GameView
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
+from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
 import random
 
 
@@ -38,23 +41,41 @@ class Battle:
         while True:
             try:
                 choice = self.view.get_player_action(battle=True)
-                if choice in [1, 2, 3]:
+                if choice in [1, 2, 3,4]:
                     return choice
                 else:
                     self.report("Invalid choice. Please enter 1 (Attack), 2 (Use Potion), or 3 (Forfeit).")
             except ValueError:
                 self.report("Invalid input. Please enter a number.")
 
+    def thief_second_turn(self):
+        while True:
+            choice = self.get_valid_player_choice()
+            if choice == 1:  # Player chooses to attack
+                if self.hero.attack(self.monster):
+                    self.report(
+                        f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
+                    return
+                else:
+                    self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
+                    return
+            elif choice == 2:
+                self.controller.use_potion(self.view.get_potion_type())
+                self.report(f'{self.hero.name} used a potion.')
+                return
+            elif choice == 3: self.report(f'You cannot do sneak attack on a second turn, try again.')
+            elif choice == 4: return 'quit'
+        
     def battle(self):
         """
         Handle the battle logic between the hero and the monster.
         """
         while self.hero.hit_points > 0:
-            self.view.display_hero_status()
+            self.view.display_both_stats(self.monster)
 
             # ✅ Fix: Only display monster status if the monster is still alive
-            if self.monster:
-                self.view.display_monster_status(self.monster)
+            # if self.monster:
+            #     self.view.display_monster_status(self.monster)
 
             choice = self.get_valid_player_choice()
 
@@ -69,7 +90,29 @@ class Battle:
                 self.controller.use_potion(self.view.get_potion_type())
                 self.report(f'{self.hero.name} used a potion.')
 
-            elif choice == 3:
+            elif choice == 3: #special skill
+                result = self.hero.special_skill()
+                if result:
+                    if isinstance(self.hero,Warrior):
+                        self.monster.get_hit(result)
+                        self.report(f'{self.hero.name} delivers a Crushing Blow to {self.monster.name} for {result} damage!')
+                    elif isinstance(self.hero,Priestess):
+                        self.report(f'{self.hero.name} administered a healing spell to themself for {result} hp!')
+                    elif isinstance(self.hero,Thief):
+                        if result[1] != 'none':
+                            if result[1] == 'surprise':
+                                self.monster.get_hit(result[0])
+                                self.report(f'{self.hero.name} Snuck Up On {self.monster.name} for {result[0]} damage! You get another turn.')
+                                second_turn = self.thief_second_turn()
+                                if second_turn == 'quit':                 
+                                    self.report('You decided to forfeit the battle.')
+                                    break
+                            if result[1] == 'normal':
+                                self.monster.get_hit(result[0])
+                                self.report(f'{self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.')
+                        else: self.report(f"{self.hero.name}'s sneak-attack didnt work.")
+                        
+            elif choice == 4:
                 self.report('You decided to forfeit the battle.')
                 break
 

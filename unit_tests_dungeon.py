@@ -1,16 +1,15 @@
-
-
-
 import unittest
+import sqlite3
 import numpy as np
-from dungeon import Dungeon
-from room import Room
+from SOURCE_CODE_0307_VERSION_1.model.dungeon import Dungeon
+from SOURCE_CODE_0307_VERSION_1.model.room import Room
 
 class TestDungeon(unittest.TestCase):
 
     def setUp(self):
         # Set up a new instance of the dungeon for testing.
-        self.dungeon = Dungeon(width=5, height=5)
+        self.conn = sqlite3.connect(r'SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
+        self.dungeon = Dungeon(self.conn)
 
     def test_initialization(self):
         # Test the initialization of the Dungeon.

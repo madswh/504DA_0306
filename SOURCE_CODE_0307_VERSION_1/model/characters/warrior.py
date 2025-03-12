@@ -33,6 +33,7 @@ class Warrior(Hero):
         self.max_heal = data[5]
         self.chance_to_hit = data[6]
         self.chance_to_block = data[7]
+        self.skill_name = 'Crushing Blow'
     
     def attack(self, opponent):
         if self.can_hit():
@@ -70,9 +71,8 @@ class Warrior(Hero):
     def special_skill(self):
         if random.random() <= 0.4:
             damage = random.randint(75, 175)
-            print(f"{self.name} the {self.__class__.__name__} performs a Crushing Blow dealing {damage} damage!")
             return damage
-        return 0
+        return None
     
     @property
     def name(self):
