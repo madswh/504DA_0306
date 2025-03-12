@@ -40,11 +40,16 @@ class BossMonster(Monster):
                 opponent.get_hit(random.randint(self.__min_damage,self.__max_damage))
                 return True
         return False
-    
+
     def get_hit(self, damage):
+        """
+        Reduces hit points when attacked and ensures HP never goes below 0.
+        """
         self.__hit_points -= damage
+        if self.__hit_points <= 0:
+            self.__hit_points = 0  # Ensure HP does not go negative
         return True
-    
+
     def can_hit(self):
         return random.random() <= self.__chance_to_hit
         
