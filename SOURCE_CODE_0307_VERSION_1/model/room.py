@@ -4,6 +4,7 @@ from SOURCE_CODE_0307_VERSION_1.model.items.potion import Potion
 from SOURCE_CODE_0307_VERSION_1.model.items.other_potion import OtherPotion
 from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.environmental_element import EnvironmentalElement
 
+
 class Room:
     def __init__(self, monster_factory, pillar_factory, initialize_contents=True):
         self.__has_healing_potion = False
@@ -19,11 +20,11 @@ class Room:
         self.__pillar_factory = pillar_factory
         self.__monster = None
 
-        self.__items = []               # Initialize the items list.
+        self.__items = []  # Initialize the items list.
         if initialize_contents:
             self.initialize_room_contents()
 
-        self.__is_visited = False       # Track if the room has been visited.
+        self.__is_visited = False  # Track if the room has been visited.
 
         # Initialize door state whether it is open or close.
         self.__north = random.choice([True, False])
@@ -31,105 +32,30 @@ class Room:
         self.__west = random.choice([True, False])
         self.__south = random.choice([True, False])
         if not (self.__north or self.__east or self.__west or self.__south):
-            self.__north = True           # At least one door open.
-
-    @property
-    def has_healing_potion(self):
-        return self.__has_healing_potion
-    @has_healing_potion.setter
-    def has_healing_potion(self, has_healing_potion):
-        self.__has_healing_potion = has_healing_potion
-
-    @property
-    def has_vision_potion(self):
-        return self.__has_vision_potion
-    @has_vision_potion.setter
-    def has_vision_potion(self, has_vision_potion):
-        self.__has_vision_potion = has_vision_potion
-
-    @property
-    def has_other_potion(self):
-        return self.__has_other_potion
-    @has_other_potion.setter
-    def has_other_potion(self, has_other_potion):
-        self.__has_other_potion = has_other_potion
-
-    @property
-    def has_pit(self):
-        return self.__has_pit
-    @has_pit.setter
-    def has_pit(self, has_pit):
-        self.__has_pit = has_pit
-
-    @property
-    def is_entrance(self):
-        return self.__is_entrance
-    @is_entrance.setter
-    def is_entrance(self, is_entrance):
-       self.__is_entrance = is_entrance
-
-    @property
-    def is_exit(self):
-        return self.__is_exit
-    @is_exit.setter
-    def is_exit(self, is_exit):
-       self.__is_exit = is_exit
-
-    @property
-    def pillar(self):
-        return self.__pillar
-    @pillar.setter
-    def pillar(self, pillar):
-        self.__pillar = pillar
+            self.__north = True  # At least one door open.
 
     @property
     def monster(self):
         return self.__monster
+
     @monster.setter
     def monster(self, monster):
         self.__monster = monster
 
     @property
-    def north(self):
-        return self.__north
-    @north.setter
-    def north(self, north):
-        self.__north = north
+    def pillar(self):
+        return self.__pillar
 
-    @property
-    def east(self):
-        return self.__east
-    @east.setter
-    def east(self, east):
-        self.__east = east
-
-    @property
-    def west(self):
-        return self.__west
-    @west.setter
-    def west(self, west):
-        self.__west = west
-
-    @property
-    def south(self):
-        return self.__south
-    @south.setter
-    def south(self, south):
-        self.__south = south
-
-    @property
-    def is_visited(self):
-        return self.__is_visited            # Property to check if the room has been visited.
-    @is_visited.setter
-    def is_visited(self, is_visited):
-        self.__is_visited = is_visited
-        self.__is_visited = True            # Mark the room as visited.
+    @pillar.setter
+    def pillar(self, pillar):
+        self.__pillar = pillar
 
     def initialize_room_contents(self):
-        # Randomly determine room contents.
-        # Prioritize entrance and exit order arrangement for if statement checking.
-        # This ensures that we first check for entrances and exits
-        # in the correct sequence, allowing for proper navigation logic.
+        """
+        ✅ Ensure a boss monster guards each pillar.
+        ✅ The Final Boss spawns **ONLY** in the exit room **AFTER** defeating all 4 bosses.
+        """
+        # ✅ Assign entrance and exit first
         if random.random() < 1 and not self.__is_exit:
             self.__is_entrance = True
             self.__is_entrance = EnvironmentalElement('i')
@@ -138,22 +64,28 @@ class Room:
             self.__is_exit = True
             self.__is_exit = EnvironmentalElement('O')
 
+        # ✅ If the room gets a pillar, assign a boss monster
         if random.random() < 1 and not self.__has_pit:
             self.__pillar = self.__pillar_factory.place_pillar()
 
-            # If a pillar exists, spawn a boss monster
             if self.__pillar:
-                self.__monster = self.__monster_factory.create_boss_monster()  # Boss monster for pillar rooms
+                # ✅ Boss spawns in pillar rooms
+                self.__monster = self.__monster_factory.create_boss_monster()
             else:
-                self.__monster = self.__monster_factory.create_monster()  # Regular monster otherwise
+                self.__monster = self.__monster_factory.create_monster()
 
             self.__items.append(self.__monster)
 
-        # Ensure pillar and monsters are not in the same room as pit.
+        # ✅ If this is the exit room and all 4 pillars are collected, spawn the **Final Boss**
+        if self.__is_exit and len(self.__monster_factory.defeated_bosses) == 4:
+            self.__monster = self.__monster_factory.create_final_boss()
+
+        # ✅ Ensure a pillar and a monster are NOT in a pit room
         if random.random() < 0.5 and not self.__pillar and not self.__monster:
             self.__has_pit = True
             self.__has_pit = EnvironmentalElement('X')
 
+        # ✅ Randomly add potions
         if random.random() < 0.5:
             self.__has_healing_potion = True
             self.__has_healing_potion = Potion('H')
@@ -165,19 +97,9 @@ class Room:
         if random.random() < 0.5 and not self.__pillar and not self.__has_pit:
             self.__has_other_potion = OtherPotion()
             self.__items.append(self.__has_other_potion)
-            self.__monster = self.__monster_factory.create_monster()
-            self.__items.append(self.__monster)
 
     def __str__(self):
-        ### DEBUGGING STATEMENT - Do not remove.
-        #print(
-        #    f"\nNorth door: {self.north}\n"
-        #    f"West door: {self.west},    "
-        #    f"East door: {self.east}\n"
-        #    f"South door: {self.south}\n"
-        #)
-
-        # Collect symbols for the room's middle representation.
+        """ ✅ Updated room display to ensure correct feature representation. """
         center_symbols = []
 
         if self.__is_entrance:
@@ -198,11 +120,10 @@ class Room:
             center_symbols.append("M")
 
         # Room layout.
-        top = "***" if not self.north else "*-*"
-        middle = f"{'|' if self.west else '*'} {' '.join(center_symbols) if center_symbols else ' '} {'|' if self.east else '*'}"
-        bottom = "***" if not self.south else "*-*"
+        top = "***" if not self.__north else "*-*"
+        middle = f"{'|' if self.__west else '*'} {' '.join(center_symbols) if center_symbols else ' '} {'|' if self.__east else '*'}"
+        bottom = "***" if not self.__south else "*-*"
 
-        # Add more information about the room features.
         features = []
         if self.__monster:
             features.append(str(self.monster.name))
@@ -230,5 +151,17 @@ class Room:
 
 # Test Case for Functionality:
 if __name__ == '__main__':
-    room = Room()
+    class MockMonsterFactory:
+        def create_boss_monster(self): return None
+        def create_monster(self): return None
+        def create_final_boss(self): return None
+        defeated_bosses = set()
+
+    class MockPillarFactory:
+        def place_pillar(self): return None
+
+    mock_monster_factory = MockMonsterFactory()
+    mock_pillar_factory = MockPillarFactory()
+
+    room = Room(mock_monster_factory, mock_pillar_factory)
     print(room)
