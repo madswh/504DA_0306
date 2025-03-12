@@ -36,11 +36,11 @@ class MonsterFactory:
 
         # ✅ Ensure the correct boss version of each monster is created
         if boss_name == "Ogre Boss":
-            return BossMonster(self.conn, "Ogre Boss")
+            return BossMonster(self.conn)
         elif boss_name == "Gremlin Boss":
-            return BossMonster(self.conn, "Gremlin Boss")
+            return BossMonster(self.conn)
         elif boss_name == "Skeleton Boss":
-            return BossMonster(self.conn, "Skeleton Boss")
+            return BossMonster(self.conn)
         elif boss_name == "Final Boss":
             return FinalBoss(self.conn)
 
