@@ -13,5 +13,5 @@ class Pillar(ItemFactory):
     def __str__(self):
         return (
             f"\nInventory Item(Pillar): \n"
-            f"{self.name_of_item}"
+            f"{self.name_of_item}"  # not item_name
         )

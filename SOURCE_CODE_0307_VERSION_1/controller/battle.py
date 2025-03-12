@@ -49,18 +49,6 @@ class Battle:
         """
         Handle the battle logic between the hero and the monster.
         """
-        # if random.choice([True, False]):
-        #     if self.monster.attack(self.hero):
-        #         string = f'{self.monster.name} attacked you.'
-        #     else:
-        #         string = f'{self.monster.name} tried to attack you, but failed.'
-        # else:
-        #     if self.hero.attack(self.monster):
-        #         string = f'{self.hero.name} attacked {self.monster.name}.'
-        #     else:
-        #         string = f'{self.hero.name} failed to attack {self.monster.name}.'
-        # self.report(string)
- 
         while self.hero.hit_points > 0:
             self.view.display_hero_status()
             self.view.display_monster_status(self.monster)
@@ -68,17 +56,32 @@ class Battle:
 
             if choice == 1:  # Player chooses to attack
                 if self.hero.attack(self.monster):
-                    self.report(f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
-                else: self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
+                    self.report(
+                        f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
+                else:
+                    self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
 
             elif choice == 2:
                 self.controller.use_potion(self.view.get_potion_type())
                 self.report(f'{self.hero.name} used a potion.')
-                
+
             elif choice == 3:
                 self.report('You decided to forfeit the battle.')
                 break
 
+            # ensure the battle ends when the monster reaches 0 HP
+            if self.monster.hit_points <= 0:
+                self.view.display_message(f"{self.monster.name} has been defeated!")  # inform the player
+                self.view.someone_died(self.monster, 0)  # display death message
+                self.controller.current_room.monster = None  # remove the defeated monster from the room
+
+                # if a pillar exists in this room, collect it - SHOULD BE!
+                if self.controller.current_room.pillar:
+                    self.controller.collect_pillar()
+
+                return  # Exit the battle function immediately
+
+            # monster's turn if still alive
             if self.monster.hit_points > 0:
                 if random.choice([True, False]):
                     if self.monster.attack(self.hero):
@@ -87,18 +90,11 @@ class Battle:
                         string = f'{self.monster.name} tried to attack you, but failed.'
                 elif self.monster.heal():
                     string = f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
-                if string: self.report(string)
 
-            else:
-                self.view.someone_died(self.monster, 0)
-                self.controller.current_room.monster = None
+                if string:
+                    self.report(string)
 
-                # Check if the room has a pillar, and collect it
-                if self.controller.current_room.pillar:
-                    self.controller.collect_pillar()
-                   # self.view.display_message(f'You collected the {self.controller.current_room.pillar.name} pillar!')
-                break
-
+            # ensure hero death is properly handled
             if self.hero.hit_points <= 0:
                 self.view.someone_died(self.hero, 1)
                 break

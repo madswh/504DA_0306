@@ -277,7 +277,7 @@ class GameController:
         """
         pillar = self.current_room.pillar
         self.hero.pillars.append(pillar)  # Add to hero's inventory
-        self.view.display_message(f"You have collected the {pillar.item_name} pillar!")
+        self.view.display_message(f"You have collected the {pillar.name_of_item} pillar!")
         self.current_room.pillar = None  # Remove from the room
 
 
