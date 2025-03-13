@@ -197,6 +197,16 @@ class GameController:
             self.view.display_message(f"\nYou have collected the {self.current_room.pillar.name_of_item} pillar!")
             self.current_room.pillar = None  # Remove pillar from the room
 
+    def use_potion(self,int):
+        if int == 1 and self.hero.healing_potions:
+            self.hero.hit_points += random.randint(self.hero.min_heal,self.hero.max_heal)
+            self.hero.healing_potions -= 1
+        elif int == 2 and self.hero.vision_potions:
+            self.dungeon.display_dungeon(self.current_location)
+            self.hero.vision_potions -= 1
+        else: self.view.display_message('Invalid input or no potions available.')
+        
+    
     def play(self):
         """Main game loop to handle the game play."""
         self.view.display_message("\nYour Dungeon Adventure starts here!")

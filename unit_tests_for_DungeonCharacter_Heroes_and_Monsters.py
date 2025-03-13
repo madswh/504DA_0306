@@ -1,24 +1,23 @@
-
-
-
 import unittest
+import sqlite3
 from unittest.mock import patch
-from warrior import Warrior
-from priestess import Priestess
-from thief import Thief
-from boss_monster import BossMonster
-from ogre import Ogre
-from gremlin import Gremlin
-from skeleton import Skeleton
+from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
+from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
+from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
+from SOURCE_CODE_0307_VERSION_1.model.characters.gremlin import Gremlin
+from SOURCE_CODE_0307_VERSION_1.model.characters.skeleton import Skeleton
 
 class TestWarrior(unittest.TestCase):
     def setUp(self):
         # Set up a new Warrior instance for each test.
-        self.warrior = Warrior('Test Warrior...TEAM AWESOME')
+        self.conn = sqlite3.connect(r'SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
+        self.warrior = Warrior(self.conn)
 
     def test_initialization(self):
         # Test the initialization of the Warrior class.
-        self.assertEqual(self.warrior.name, 'Test Warrior...TEAM AWESOME')
+        self.assertEqual(self.warrior.name, 'Warrior')
         self.assertEqual(self.warrior.hit_points, 100)
         self.assertEqual(self.warrior.min_damage, 35)
         self.assertEqual(self.warrior.max_damage, 60)
@@ -26,7 +25,7 @@ class TestWarrior(unittest.TestCase):
     @patch('random.random', return_value=0.5)
     def test_attack_against_monster(self, mock_random):
         # Test the Warrior's attack against a Monster.
-        opponent = Ogre('Ogre')
+        opponent = Ogre(self.conn)
         initial_hp = opponent.hit_points
         self.warrior.attack(opponent)
         self.assertLess(opponent.hit_points, initial_hp)

@@ -101,7 +101,7 @@ class Room:
 
             if self.__pillar:
                 # ✅ Boss spawns in pillar rooms, passing `defeated_bosses`
-                self.__monster = self.__monster_factory.create_boss_monster(defeated_bosses=len(self.__monster_factory.defeated_bosses))
+                self.__monster = self.__monster_factory.create_boss_monster()
             else:
                 self.__monster = self.__monster_factory.create_monster()
 

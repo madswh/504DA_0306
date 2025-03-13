@@ -7,17 +7,17 @@ class Warrior(Hero):
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
-        self.__chance_to_hit = 0
-        self.__chance_to_block = 0
         self.__min_heal = 0
         self.__max_heal = 0
+        self.__chance_to_hit = 0
+        self.__chance_to_block = 0
         
         self.vision_potions = 0
         self.healing_potions = 0
         self.pillars = []
         self.conn = db_conn
         self.fill_stats()
-        
+
     def get_stats(self):
         cursor = self.conn.cursor()
         data = []
@@ -29,10 +29,11 @@ class Warrior(Hero):
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.chance_to_hit = data[5]
-        self.chance_to_block = data[6]
-        self.min_heal = data[7]
-        self.max_heal = data[8]
+        self.min_heal = data[4]
+        self.max_heal = data[5]
+        self.chance_to_hit = data[6]
+        self.chance_to_block = data[7]
+        self.skill_name = 'Crushing Blow'
     
     def attack(self, opponent):
         if self.can_hit():
@@ -70,9 +71,8 @@ class Warrior(Hero):
     def special_skill(self):
         if random.random() <= 0.4:
             damage = random.randint(75, 175)
-            print(f"{self.name} the {self.__class__.__name__} performs a Crushing Blow dealing {damage} damage!")
             return damage
-        return 0
+        return None
     
     @property
     def name(self):

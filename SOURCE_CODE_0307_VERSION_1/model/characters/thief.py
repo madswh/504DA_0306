@@ -7,17 +7,17 @@ class Thief(Hero):
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
-        self.__chance_to_hit = 0
-        self.__chance_to_block = 0
         self.__min_heal = 0
         self.__max_heal = 0
+        self.__chance_to_hit = 0
+        self.__chance_to_block = 0
         
         self.vision_potions = 0
         self.healing_potions = 0
         self.pillars = []
         self.conn = db_conn
         self.fill_stats()
-        
+
     def get_stats(self):
         cursor = self.conn.cursor()
         data = []
@@ -29,10 +29,12 @@ class Thief(Hero):
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.chance_to_hit = data[5]
-        self.chance_to_block = data[6]
-        self.min_heal = data[7]
-        self.max_heal = data[8]
+        self.min_heal = data[4]
+        self.max_heal = data[5]
+        self.chance_to_hit = data[6]
+        self.chance_to_block = data[7]
+        self.skill_name = 'Sneak Attack'
+
     
     def attack(self, opponent):
         if self.can_hit():
@@ -70,14 +72,11 @@ class Thief(Hero):
     def special_skill(self):
         surprise_chance = random.random()
         if surprise_chance <= 0.4:
-            print(f"{self.name} the {self.__class__.__name__} performs a surprise attack and gets an extra turn!")
-            return random.randint(self.min_damage, self.max_damage)  # Return surprise attack damage.
+            return random.randint(self.min_damage, self.max_damage),'surprise'  # Return surprise attack damage.
         elif surprise_chance <= 0.6:
-            print(f"{self.name} the {self.__class__.__name__} attacks normally.")
-            return random.randint(self.min_damage, self.max_damage)  # Return normal attack damage.
+            return random.randint(self.min_damage, self.max_damage),'normal'  # Return normal attack damage.
         else:
-            print(f"{self.name} the {self.__class__.__name__} was caught in the act!")
-            return 0
+            return 0, 'none'
         
     @property
     def name(self):

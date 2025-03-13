@@ -9,52 +9,32 @@ from SOURCE_CODE_0307_VERSION_1.model.characters.final_boss import FinalBoss
 class MonsterFactory:
     def __init__(self, db_conn):
         self.conn = db_conn
-        self.defeated_bosses = set()  # ✅ Track defeated bosses
+        self.available_bosses = [] #🧚 instances of all available bosses, removed each time one is used
+        self.initiate_boss_list()
 
     def create_monster(self):
         """
         Creates and returns a regular monster instance.
         """
-        return random.choice((Ogre(self.conn), Gremlin(self.conn), Skeleton(self.conn), MindLeech(self.conn)))
-
-    def create_boss_monster(self, defeated_bosses):
+        return random.choice((Ogre(self.conn,False), Gremlin(self.conn,False), Skeleton(self.conn,False), MindLeech(self.conn,False)))
+    
+    def initiate_boss_list(self):
+        self.available_bosses = [Ogre(self.conn,True),Gremlin(self.conn,True),Skeleton(self.conn,True),MindLeech(self.conn,True)]
+        
+    def create_boss_monster(self):
         """
         Creates and returns a boss monster.
 
         Returns:
             Monster: A boss monster instance (Final Boss only if 4 have been defeated).
         """
-        cursor = self.conn.cursor()
-        cursor.execute("SELECT name FROM monsters WHERE is_boss = 1")
-        boss_names = [row[0] for row in cursor.fetchall()]
-
-        if not boss_names:
-            raise Exception("No boss monsters found in the database!")
 
         # ✅ If 4 bosses have been defeated, spawn the Final Boss
-        if len(self.defeated_bosses) >= 4:
+        if len(self.available_bosses) == 0:
             return FinalBoss(self.conn)
 
-        # ✅ Filter out defeated bosses
-        available_bosses = [boss for boss in boss_names if boss != "Final Boss" and boss not in self.defeated_bosses]
-
-        if not available_bosses:
-            raise Exception("No available boss monsters left to spawn!")
-
-        boss_name = random.choice(available_bosses)
-
-        # ✅ Return the appropriate boss monster
-        if boss_name == "Ogre Boss":
-            boss = BossMonster(self.conn)
-        elif boss_name == "Gremlin Boss":
-            boss = BossMonster(self.conn)
-        elif boss_name == "Skeleton Boss":
-            boss = BossMonster(self.conn)
-        elif boss_name == "Mind Leech Boss":
-            boss = BossMonster(self.conn)
-        else:
-            raise Exception(f"Unknown boss monster name: {boss_name}")
-
+        boss = random.choice(self.available_bosses)
+        self.available_bosses.remove(boss)
         return boss
 
     def mark_boss_defeated(self, boss_name):
