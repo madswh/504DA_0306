@@ -33,8 +33,6 @@ class Thief(Hero):
         self.max_heal = data[5]
         self.chance_to_hit = data[6]
         self.chance_to_block = data[7]
-        self.skill_name = 'Sneak Attack'
-
     
     def attack(self, opponent):
         if self.can_hit():
@@ -72,11 +70,14 @@ class Thief(Hero):
     def special_skill(self):
         surprise_chance = random.random()
         if surprise_chance <= 0.4:
-            return random.randint(self.min_damage, self.max_damage),'surprise'  # Return surprise attack damage.
+            print(f"{self.name} the {self.__class__.__name__} performs a surprise attack and gets an extra turn!")
+            return random.randint(self.min_damage, self.max_damage)  # Return surprise attack damage.
         elif surprise_chance <= 0.6:
-            return random.randint(self.min_damage, self.max_damage),'normal'  # Return normal attack damage.
+            print(f"{self.name} the {self.__class__.__name__} attacks normally.")
+            return random.randint(self.min_damage, self.max_damage)  # Return normal attack damage.
         else:
-            return 0, 'none'
+            print(f"{self.name} the {self.__class__.__name__} was caught in the act!")
+            return 0
         
     @property
     def name(self):
