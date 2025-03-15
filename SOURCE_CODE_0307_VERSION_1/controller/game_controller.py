@@ -147,10 +147,6 @@ class GameController:
         self.current_room = self.dungeon.get_room(*self.current_location)
         self.current_room.is_visited = True  # Mark this room as visited.
 
-        # Display room contents after moving.
-        self.display_current_room_contents()
-        self.view.display_hero_status()
-
     def calculate_new_location(self, x, y, direction):
         """Calculate the new location based on the current location and direction.
 
@@ -226,11 +222,10 @@ class GameController:
             if action == 1:  # Move
                 self.move_adventurer(self.view.get_move_direction())
                 # self.view.display_hero_status()
-
+                self.view.clear_screen()
             elif action == 2:  # Attack
                 if self.current_room.monster:
                     battle = Battle(self, self.view)
-                    battle.battle()
                     if self.hero.hit_points <= 0:
                         break  # The monster killed the hero.
                 else:
