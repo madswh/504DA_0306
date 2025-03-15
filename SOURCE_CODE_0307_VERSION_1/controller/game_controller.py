@@ -82,6 +82,7 @@ class GameController:
             name = self.view.enter_name()
             self.choose_hero(self.view.choose_hero_class())
             self.hero.name = f'{name} the {self.hero.name}'
+        self.view.clear_screen()
         self.view.hero = self.hero
         self.play()
 
@@ -167,6 +168,14 @@ class GameController:
         elif direction == 4:
             return x, y - 1
 
+    def show_available_directions(self):
+        string = 'Available directions: '
+        if self.current_room.north: string += 'N '
+        if self.current_room.south: string += 'S '
+        if self.current_room.east: string += 'E '
+        if self.current_room.west: string += 'W '
+        self.view.display_message(string)
+    
     def handle_pits(self, current_room):
         """Handle pits found in the current room."""
         if current_room.has_pit:
@@ -219,13 +228,15 @@ class GameController:
 
             action = self.view.get_player_action()
             self.view.clear_screen()
+            
             if action == 1:  # Move
+                self.show_available_directions()
                 self.move_adventurer(self.view.get_move_direction())
                 # self.view.display_hero_status()
                 self.view.clear_screen()
             elif action == 2:  # Attack
                 if self.current_room.monster:
-                    battle = Battle(self, self.view)
+                    Battle(self, self.view)
                     if self.hero.hit_points <= 0:
                         break  # The monster killed the hero.
                 else:

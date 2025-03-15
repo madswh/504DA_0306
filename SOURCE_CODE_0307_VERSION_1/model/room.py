@@ -49,6 +49,22 @@ class Room:
         self.__is_exit = other
     
     @property
+    def north(self):
+        return self.__north
+    
+    @property
+    def south(self):
+        return self.__south
+    
+    @property
+    def east(self):
+        return self.__east
+
+    @property
+    def west(self):
+        return self.__west
+
+    @property
     def monster(self):
         return self.__monster
 
