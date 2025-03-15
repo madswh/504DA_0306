@@ -222,10 +222,10 @@ class GameController:
             self.display_current_room_contents()
 
             action = self.view.get_player_action()
-
+            self.view.clear_screen()
             if action == 1:  # Move
                 self.move_adventurer(self.view.get_move_direction())
-                self.view.display_hero_status()
+                # self.view.display_hero_status()
 
             elif action == 2:  # Attack
                 if self.current_room.monster:

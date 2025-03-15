@@ -35,6 +35,20 @@ class Room:
             self.__north = True  # At least one door open.
 
     @property
+    def is_entrance(self):
+        return self.__is_entrance
+    @is_entrance.setter
+    def is_entrance(self,other):
+        self.__is_entrance = other
+        
+    @property
+    def is_exit(self):
+        return self.__is_exit
+    @is_exit.setter
+    def is_exit(self,other):
+        self.__is_exit = other
+    
+    @property
     def monster(self):
         return self.__monster
 
@@ -87,13 +101,13 @@ class Room:
         ✅ Ensure a boss monster guards each pillar.
         """
         # ✅ Assign entrance and exit first
-        if random.random() < 1 and not self.__is_exit:
-            self.__is_entrance = True
-            self.__is_entrance = EnvironmentalElement('i')
+        # if random.random() < 1 and not self.__is_exit:
+        #     self.__is_entrance = True
+        #     self.__is_entrance = EnvironmentalElement('i')
 
-        if random.random() < 0.1 and not self.__is_entrance:
-            self.__is_exit = True
-            self.__is_exit = EnvironmentalElement('O')
+        # if random.random() < 0.1 and not self.__is_entrance:
+        #     self.__is_exit = True
+        #     self.__is_exit = EnvironmentalElement('O')
 
         # ✅ If the room gets a pillar, assign a boss monster
         if random.random() < 1 and not self.__has_pit:

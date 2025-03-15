@@ -38,8 +38,8 @@ class Dungeon:
     def set_entrance_exit(self):
         entrance_position = self.__grid[0, 0]
         exit_position = self.__grid[self.__grid.shape[0] - 1, self.__grid.shape[1] - 1]
-        entrance_position.is_entrance = f"Environmental Element: \nEntrance\n"
-        exit_position.is_exit = f"Environmental Element: \nExit\n"
+        entrance_position.is_entrance = True
+        exit_position.is_exit = True
 
     def get_room(self, x, y):
         if 0 <= x < self.__grid.shape[0] and 0 <= y < self.__grid.shape[1]:

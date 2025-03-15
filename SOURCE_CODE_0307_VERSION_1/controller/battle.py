@@ -70,7 +70,7 @@ class Battle:
         """
         Handle the battle logic between the hero and the monster.
         """
-        while self.hero.hit_points > 0:
+        while True:
             self.view.display_both_stats(self.monster)
 
             # ✅ Fix: Only display monster status if the monster is still alive
@@ -78,7 +78,7 @@ class Battle:
             #     self.view.display_monster_status(self.monster)
 
             choice = self.get_valid_player_choice()
-
+            self.view.clear_screen()
             if choice == 1:  # Player chooses to attack
                 if self.hero.attack(self.monster):
                     self.report(
@@ -133,7 +133,7 @@ class Battle:
                 if self.controller.current_room.pillar:
                     self.controller.collect_pillar()
 
-                return  # Ensure the battle function exits immediately
+                break  # Ensure the battle function exits immediately
 
             # ✅ Monster's turn if still alive
             if self.monster and self.monster.hit_points > 0:

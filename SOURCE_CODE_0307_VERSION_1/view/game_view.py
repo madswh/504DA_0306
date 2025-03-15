@@ -1,3 +1,4 @@
+import os
 class GameView:
     def __init__(self,controller):
         self.controller = controller
@@ -143,3 +144,5 @@ class GameView:
     def display_message(self, message):
         print(message)
 
+    def clear_screen(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
