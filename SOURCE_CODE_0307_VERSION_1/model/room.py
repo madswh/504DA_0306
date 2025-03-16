@@ -112,6 +112,10 @@ class Room:
     def has_pit(self, has_pit):
         self.__has_pit = has_pit
 
+    @property
+    def items(self):
+        return self.__items
+
     def initialize_room_contents(self):
         """
         ✅ Ensure a boss monster guards each pillar.
@@ -126,34 +130,37 @@ class Room:
         #     self.__is_exit = EnvironmentalElement('O')
 
         # ✅ If the room gets a pillar, assign a boss monster
-        if random.random() < 1 and not self.__has_pit:
-            self.__pillar = self.__pillar_factory.place_pillar()
+        if random.random() < 1 and not self.has_pit:
+            self.pillar = self.__pillar_factory.place_pillar()
 
-            if self.__pillar:
+            if self.pillar:
                 # ✅ Boss spawns in pillar rooms, passing `defeated_bosses`
-                self.__monster = self.__monster_factory.create_boss_monster()
+                self.monster = self.__monster_factory.create_boss_monster()
             else:
-                self.__monster = self.__monster_factory.create_monster()
+                self.monster = self.__monster_factory.create_monster()
 
-            self.__items.append(self.__monster)
+            self.items.append(self.monster)
 
         # ✅ Ensure a pillar and a monster are NOT in a pit room
-        if random.random() < 0.5 and not self.__pillar and not self.__monster:
-            self.__has_pit = True
-            self.__has_pit = EnvironmentalElement('X')
+        if random.random() < 0.5 and not self.pillar and not self.monster:
+            self.has_pit = True
+            self.has_pit = EnvironmentalElement('X')
+            self.items.append(self.has_pit)
 
         # ✅ Randomly add potions
         if random.random() < 0.5:
-            self.__has_healing_potion = True
-            self.__has_healing_potion = Potion('H')
+            self.has_healing_potion = True
+            self.has_healing_potion = Potion('H')
+            self.items.append(self.has_healing_potion)
 
         if random.random() < 0.5:
-            self.__has_vision_potion = True
-            self.__has_vision_potion = Potion('V')
+            self.has_vision_potion = True
+            self.has_vision_potion = Potion('V')
+            self.items.append(self.has_vision_potion)
 
-        if random.random() < 0.5 and not self.__pillar and not self.__has_pit:
-            self.__has_other_potion = OtherPotion()
-            self.__items.append(self.__has_other_potion)
+        if random.random() < 0.5 and not self.pillar and not self.has_pit:
+            self.has_other_potion = OtherPotion()
+            self.items.append(self.has_other_potion)
 
     def __str__(self):
         """ ✅ Updated room display to ensure correct feature representation. """

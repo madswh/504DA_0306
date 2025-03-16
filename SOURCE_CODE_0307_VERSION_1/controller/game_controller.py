@@ -114,7 +114,7 @@ class GameController:
     def check_for_pillar(self, current_room):
         """Check if there is a pillar in the current room and handle collection."""
         if current_room.pillar and current_room.monster:
-            self.view.display_message(f"\nYou see a pillar: {current_room.pillar.name_of_item}, to collect it, defeat the {current_room.monster.name} first.")
+            self.view.display_message(f"\nThe {current_room.monster.name} is guarding the Pillar of {current_room.pillar.name_of_item}.\nDefeat the {current_room.monster.name} to collect it.")
         elif current_room.pillar:
             self.collect_pillar()
 
@@ -122,12 +122,15 @@ class GameController:
         """Display the contents of the current room."""
         if self.current_room.monster:
             self.view.display_message(f"\nA wild {self.current_room.monster.name} has appeared!")
+            self.view.print_monster_image(self.current_room.monster)
             self.view.display_monster_info(self.current_room.monster)
 
         self.check_for_pillar(self.current_room)
         self.check_for_potions(self.current_room)
         self.handle_other_potions(self.current_room)
         self.handle_pits(self.current_room)
+        if not self.current_room.items:
+            self.view.display_message('Room is empty')
 
     def move_adventurer(self, direction):
         """Move the adventurer in the specified direction.
@@ -211,7 +214,6 @@ class GameController:
             self.hero.vision_potions -= 1
         else: self.view.display_message('Invalid input or no potions available.')
         
-    
     def play(self):
         """Main game loop to handle the game play."""
         self.view.display_message("\nYour Dungeon Adventure starts here!")

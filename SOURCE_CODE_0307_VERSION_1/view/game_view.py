@@ -1,4 +1,6 @@
 import os
+import SOURCE_CODE_0307_VERSION_1.view.monster_images as picture
+
 class GameView:
     def __init__(self,controller):
         self.controller = controller
@@ -46,16 +48,17 @@ class GameView:
             except ValueError:
                 print("Please enter a valid number.")
 
-    def display_room_contents(self):
-        self.controller.display_current_room_contents()
-
     def display_monster_info(self, monster):
         print(f"\n--- {monster.name} Information ---")
-        print(f"Monster Name: {monster.name}")
-        print(f"HP: {monster.hit_points}")
+        print(f"Hit Points: {monster.hit_points}")
         print(f"Attack Damage: {monster.min_damage}-{monster.max_damage}")
-        print(f"--- End of {monster.name} Information ---\n")
 
+    def print_monster_image(self,monster):
+        if monster.name == 'Ogre': print(picture.ogre)
+        elif monster.name == 'Gremlin': print(picture.gremlin)
+        elif monster.name == 'Skeleton': print(picture.skeleton)
+        elif monster.name == 'Mind Leech': print(picture.mindleach)
+    
     def display_hero_status(self):
         if self.hero:
             print("\n-- Player Status ---")
