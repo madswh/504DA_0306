@@ -88,14 +88,14 @@ class GameController:
 
     def check_for_potions(self, current_room):
         """Check if the current room contains potions and update the hero's inventory."""
-        if current_room.has_healing_potion:
+        if current_room.healing_potion:
             self.hero.healing_potions += 1
-            current_room.has_healing_potion = False
+            current_room.healing_potion = None
             self.view.display_message("\nYou collected a Healing Potion!")
 
-        if current_room.has_vision_potion:
+        if current_room.vision_potion:
             self.hero.vision_potions += 1
-            current_room.has_vision_potion = False
+            current_room.vision_potion = None
             self.view.display_message("\nYou collected a Vision Potion!")
 
     def choose_hero(self, choice):
@@ -181,22 +181,22 @@ class GameController:
     
     def handle_pits(self, current_room):
         """Handle pits found in the current room."""
-        if current_room.has_pit:
+        if current_room.pit:
             pit_damage = random.randint(20, 50)
             self.hero.hit_points -= pit_damage
-            current_room.has_pit = False
+            current_room.pit = None
             self.view.display_message(f"\nYou fell into a pit and took {pit_damage} damage!")
 
     def handle_other_potions(self, current_room):
         """Handle other types of potions found in the current room."""
-        if current_room.has_other_potion:
+        if current_room.other_potion:
             potion_effect = self.hero.handle_other_potion(
-                current_room.has_other_potion.name_of_item,
+                current_room.other_potion.name_of_item,
                 current_room.monster.name if current_room.monster else None
             )
-            self.view.display_message(f"\nYou found a {current_room.has_other_potion.name_of_item} Potion!")
+            self.view.display_message(f"\nYou found a {current_room.other_potion.name_of_item} Potion!")
             self.view.display_message(potion_effect)
-            current_room.has_other_potion = None  # Remove the potion from the room
+            current_room.other_potion = None  # Remove the potion from the room
 
     def collect_pillar(self):
         """Collect a pillar if present in the current room."""
@@ -207,8 +207,10 @@ class GameController:
 
     def use_potion(self,int):
         if int == 1 and self.hero.healing_potions:
+            health = random.randint(self.hero.min_heal,self.hero.max_heal)
             self.hero.hit_points += random.randint(self.hero.min_heal,self.hero.max_heal)
             self.hero.healing_potions -= 1
+            self.view.display_message(f'You used a healing potion and gained {health} HP.')
         elif int == 2 and self.hero.vision_potions:
             self.dungeon.display_dungeon(self.current_location)
             self.hero.vision_potions -= 1
@@ -256,15 +258,14 @@ class GameController:
                 self.view.display_message("Invalid action! Please choose Move, Attack, Use Potion, or Quit.")
 
             # Spawn Final Boss at exit only after collecting all four pillars AND defeating all four boss monsters
-            if (
-                self.current_room.is_exit
-                and len(self.hero.pillars) == 4
-                and self.defeated_bosses == 4
-                and not self.final_boss_spawned
-            ):
+            # if (
+            #     self.current_room.is_exit
+            #     and len(self.hero.pillars) == 4
+            #     and not self.final_boss_spawned
+            # ):
                 self.view.display_message("A Final Boss appears at the exit!")
-                self.current_room.monster = FinalBoss(self.conn)
-                self.final_boss_spawned = True  # Ensure it only spawns once
+                # self.current_room.monster = FinalBoss(self.conn)
+                # self.final_boss_spawned = True  # Ensure it only spawns once
 
             # If the Final Boss is defeated, trigger the victory
             if self.current_room.is_exit and len(self.hero.pillars) == 4 and self.current_room.monster is None:

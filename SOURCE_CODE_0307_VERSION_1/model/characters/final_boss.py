@@ -27,11 +27,10 @@ class FinalBoss(BossMonster):
                 self.__hit_points,
                 self.__min_damage,
                 self.__max_damage,
-                self.__attack_speed,
-                self.__chance_to_hit,
-                self.__chance_to_heal,
                 self.__min_heal,
                 self.__max_heal,
+                self.__chance_to_hit,
+                self.__chance_to_heal,
                 self.__is_boss,
                 self.__flavor_text
             ) = data

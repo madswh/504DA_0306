@@ -6,25 +6,23 @@ from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.environmental_element imp
 
 
 class Room:
-    def __init__(self, monster_factory, pillar_factory, initialize_contents=True):
-        self.__has_healing_potion = False
-        self.__has_vision_potion = False
-        self.__has_other_potion = None
+    def __init__(self, monster_factory, pillar_factory):
+        self.__healing_potion = None
+        self.__vision_potion = None
+        self.__other_potion = None
+        self.__pit = None
 
-        self.__has_pit = False
         self.__is_entrance = False
         self.__is_exit = False
+        
+        self.__is_visited = False  # Track if the room has been visited.
 
-        self.__pillar = None
         self.__monster_factory = monster_factory
         self.__pillar_factory = pillar_factory
+        self.__pillar = None
         self.__monster = None
-
         self.__items = []  # Initialize the items list.
-        if initialize_contents:
-            self.initialize_room_contents()
 
-        self.__is_visited = False  # Track if the room has been visited.
 
         # Initialize door state whether it is open or closed.
         self.__north = random.choice([True, False])
@@ -73,28 +71,28 @@ class Room:
         self.__monster = monster
 
     @property
-    def has_vision_potion(self):
-        return self.__has_vision_potion
+    def vision_potion(self):
+        return self.__vision_potion
 
-    @has_vision_potion.setter
-    def has_vision_potion(self, has_vision_potion):
-        self.__has_vision_potion = has_vision_potion
-
-    @property
-    def has_other_potion(self):
-        return self.__has_other_potion
-
-    @has_other_potion.setter
-    def has_other_potion(self, has_other_potion):
-        self.__has_other_potion = has_other_potion
+    @vision_potion.setter
+    def vision_potion(self, vision_potion):
+        self.__vision_potion = vision_potion
 
     @property
-    def has_healing_potion(self):
-        return self.__has_healing_potion
+    def other_potion(self):
+        return self.__other_potion
 
-    @has_healing_potion.setter
-    def has_healing_potion(self, has_healing_potion):
-        self.__has_healing_potion = has_healing_potion
+    @other_potion.setter
+    def other_potion(self, other_potion):
+        self.__other_potion = other_potion
+
+    @property
+    def healing_potion(self):
+        return self.__healing_potion
+
+    @healing_potion.setter
+    def healing_potion(self, healing_potion):
+        self.__healing_potion = healing_potion
 
     @property
     def pillar(self):
@@ -105,12 +103,12 @@ class Room:
         self.__pillar = pillar
 
     @property
-    def has_pit(self):
-        return self.__has_pit
+    def pit(self):
+        return self.__pit
 
-    @has_pit.setter
-    def has_pit(self, has_pit):
-        self.__has_pit = has_pit
+    @pit.setter
+    def pit(self, pit):
+        self.__pit = pit
 
     @property
     def items(self):
@@ -120,67 +118,56 @@ class Room:
         """
         ✅ Ensure a boss monster guards each pillar.
         """
-        # ✅ Assign entrance and exit first
-        # if random.random() < 1 and not self.__is_exit:
-        #     self.__is_entrance = True
-        #     self.__is_entrance = EnvironmentalElement('i')
-
-        # if random.random() < 0.1 and not self.__is_entrance:
-        #     self.__is_exit = True
-        #     self.__is_exit = EnvironmentalElement('O')
-
         # ✅ If the room gets a pillar, assign a boss monster
-        if random.random() < 1 and not self.has_pit:
+        if random.random() < 1 and not self.pit:
             self.pillar = self.__pillar_factory.place_pillar()
-
-            if self.pillar:
-                # ✅ Boss spawns in pillar rooms, passing `defeated_bosses`
+            if self.pillar: #could be none after 4 pillars are placed. there are only 4 bosses available
                 self.monster = self.__monster_factory.create_boss_monster()
-            else:
-                self.monster = self.__monster_factory.create_monster()
-
-            self.items.append(self.monster)
+                self.items.append(self.pillar)
+                self.items.append(self.monster)
 
         # ✅ Ensure a pillar and a monster are NOT in a pit room
         if random.random() < 0.5 and not self.pillar and not self.monster:
-            self.has_pit = True
-            self.has_pit = EnvironmentalElement('X')
-            self.items.append(self.has_pit)
+            self.pit = EnvironmentalElement('X')
+            self.items.append(self.pit)
 
+        #ensure some rooms have regular monsters, without a pit
+        if random.random() < 0.5 and not self.monster and not self.pit:
+            self.monster = self.__monster_factory.create_monster()
+            self.items.append(self.monster)
+        
         # ✅ Randomly add potions
         if random.random() < 0.5:
-            self.has_healing_potion = True
-            self.has_healing_potion = Potion('H')
-            self.items.append(self.has_healing_potion)
+            self.healing_potion = Potion('H')
+            self.items.append(self.healing_potion)
 
         if random.random() < 0.5:
-            self.has_vision_potion = True
-            self.has_vision_potion = Potion('V')
-            self.items.append(self.has_vision_potion)
+            self.vision_potion = Potion('V')
+            self.items.append(self.vision_potion)
 
-        if random.random() < 0.5 and not self.pillar and not self.has_pit:
-            self.has_other_potion = OtherPotion()
-            self.items.append(self.has_other_potion)
+        if random.random() < 0.5 and not self.pillar and not self.pit:
+            self.other_potion = OtherPotion()
+            self.items.append(self.other_potion)
 
     def __str__(self):
         """ ✅ Updated room display to ensure correct feature representation. """
         center_symbols = []
 
-        if self.__is_entrance:
+        if self.is_entrance:
             center_symbols.append("i")
-        if self.__is_exit:
+        if self.is_exit:
             center_symbols.append("O")
-        if self.__pillar:
-            center_symbols.append(self.__pillar.name_of_item[0].upper())  # Use name from Pillar.
-        if self.__has_healing_potion:
+        if self.pillar:
+            center_symbols.append(self.pillar.name_of_item[0].upper())  # Use name from Pillar.
+        if self.healing_potion:
             center_symbols.append("H")
-        if self.__has_vision_potion:
+        if self.vision_potion:
             center_symbols.append("V")
-        if self.__has_other_potion:
+        if self.other_potion:
             center_symbols.append("p")
-        if self.__has_pit:
+        if self.pit:
             center_symbols.append("X")
-        if self.__monster:
+        if self.monster:
             center_symbols.append("M")
 
         # Room layout.
@@ -189,22 +176,22 @@ class Room:
         bottom = "***" if not self.__south else "*-*"
 
         features = []
-        if self.__monster:
+        if self.monster:
             features.append(str(self.monster.name))
-        if self.__pillar:
-            features.append(str(self.__pillar))
-        if self.__has_healing_potion:
-            features.append(str(self.__has_healing_potion))
-        if self.__has_vision_potion:
-            features.append(str(self.__has_vision_potion))
-        if self.__has_other_potion:
-            features.append(str(self.__has_other_potion))
-        if self.__has_pit:
-            features.append(str(self.__has_pit))
-        if self.__is_entrance:
-            features.append(str(self.__is_entrance))
-        if self.__is_exit:
-            features.append(str(self.__is_exit))
+        if self.pillar:
+            features.append(str(self.pillar.item_name))
+        if self.healing_potion:
+            features.append(str(self.healing_potion))
+        if self.vision_potion:
+            features.append(str(self.vision_potion))
+        if self.other_potion:
+            features.append(str(self.other_potion))
+        if self.pit:
+            features.append(str(self.pit))
+        if self.is_entrance:
+            features.append(str(self.is_entrance))
+        if self.is_exit:
+            features.append(str(self.is_exit))
 
         features_str = "\n".join(features) if features else "No features"
 

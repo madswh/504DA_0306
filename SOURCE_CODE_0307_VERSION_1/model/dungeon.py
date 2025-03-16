@@ -13,6 +13,7 @@ class Dungeon:
         self.pillar_factory = PillarFactory()
         self.__grid = np.array([[Room(self.monster_factory,self.pillar_factory) for _ in range(width)] for _ in range(height)])
         self.set_entrance_exit()
+        self.fill_rooms_with_stuff()
 
     @property
     def width(self):
@@ -36,11 +37,17 @@ class Dungeon:
         self.__grid = grid
 
     def set_entrance_exit(self):
-        entrance_position = self.__grid[0, 0]
-        exit_position = self.__grid[self.__grid.shape[0] - 1, self.__grid.shape[1] - 1]
+        entrance_position = self.grid[0, 0]
+        exit_position = self.grid[self.grid.shape[0] - 1, self.grid.shape[1] - 1]
         entrance_position.is_entrance = True
         exit_position.is_exit = True
+        exit_position.monster = self.monster_factory.create_final_boss()
 
+    def fill_rooms_with_stuff(self):
+        for row in self.grid:
+            for room in row:
+                if not room.is_entrance and not room.is_exit: room.initialize_room_contents()
+    
     def get_room(self, x, y):
         if 0 <= x < self.__grid.shape[0] and 0 <= y < self.__grid.shape[1]:
             return self.__grid[x, y]

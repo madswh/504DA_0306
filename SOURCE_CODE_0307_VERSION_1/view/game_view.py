@@ -54,10 +54,10 @@ class GameView:
         print(f"Attack Damage: {monster.min_damage}-{monster.max_damage}")
 
     def print_monster_image(self,monster):
-        if monster.name == 'Ogre': print(picture.ogre)
-        elif monster.name == 'Gremlin': print(picture.gremlin)
-        elif monster.name == 'Skeleton': print(picture.skeleton)
-        elif monster.name == 'Mind Leech': print(picture.mindleach)
+        if monster.name == 'Ogre' or monster.name == 'Ogre Boss': print(picture.ogre)
+        elif monster.name == 'Gremlin' or monster.name == 'Gremlin Boss': print(picture.gremlin)
+        elif monster.name == 'Skeleton' or monster.name == 'Skeleton Boss': print(picture.skeleton)
+        elif monster.name == 'Mind Leech' or monster.name == 'Mind Leech Boss': print(picture.mindleach)
     
     def display_hero_status(self):
         if self.hero:
