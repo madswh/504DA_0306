@@ -45,6 +45,7 @@ class GameController:
 
     def scrub_all_conns(self):
         """Remove all references to database connections before saving the game."""
+        self.conn.close()
         self.conn = None
         self.dungeon.conn = None
         self.dungeon.monster_factory.conn = None
