@@ -179,7 +179,7 @@ class Room:
         if self.monster:
             features.append(str(self.monster.name))
         if self.pillar:
-            features.append(str(self.pillar.item_name))
+            features.append(str(self.pillar.name_of_item))
         if self.healing_potion:
             features.append(str(self.healing_potion))
         if self.vision_potion:
