@@ -1,15 +1,12 @@
-
-
-
 import unittest
 from unittest.mock import patch
-from warrior import Warrior
-from priestess import Priestess
-from thief import Thief
-from boss_monster import BossMonster
-from ogre import Ogre
-from gremlin import Gremlin
-from skeleton import Skeleton
+from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
+from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
+from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
+from SOURCE_CODE_0307_VERSION_1.model.characters.gremlin import Gremlin
+from SOURCE_CODE_0307_VERSION_1.model.characters.skeleton import Skeleton
 
 class TestWarrior(unittest.TestCase):
     def setUp(self):

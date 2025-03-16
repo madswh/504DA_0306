@@ -224,12 +224,12 @@ class GameController:
         while True:
             self.current_room = self.dungeon.get_room(*self.current_location)
 
-            if self.hero.hit_points <= 0:
-                self.view.display_message("Game Over! You have no more hit points.")
-                break
-
             self.view.display_hero_status()
             self.display_current_room_contents()
+            
+            if self.hero.hit_points <= 0:
+                self.view.display_message("Your health has slipped away, the game is over.")
+                break
 
             action = self.view.get_player_action()
             self.view.clear_screen()
@@ -237,13 +237,17 @@ class GameController:
             if action == 1:  # Move
                 self.show_available_directions()
                 self.move_adventurer(self.view.get_move_direction())
-                # self.view.display_hero_status()
                 self.view.clear_screen()
+                if self.hero.hit_points <= 0:
+                    self.view.display_message('Your health has slipped away, the game is over.')
+                    break
+                
             elif action == 2:  # Attack
                 if self.current_room.monster:
                     Battle(self, self.view)
                     if self.hero.hit_points <= 0:
-                        break  # The monster killed the hero.
+                        self.view.display_message('You were slain in battle, the game is over.')
+                        break
                 else:
                     self.view.display_message("There's no monster to attack!")
 
@@ -264,7 +268,11 @@ class GameController:
             #     and len(self.hero.pillars) == 4
             #     and not self.final_boss_spawned
             # ):
+            if self.current_room.is_exit and len(self.hero.pillars) == 4:
                 self.view.display_message("A Final Boss appears at the exit!")
+                Battle(self,self.view)
+            elif self.current_room.is_exit and len(self.hero.pillars) != 4:
+                self.view.display_message(f'To exit, you must collect all 4 pillars.')
                 # self.current_room.monster = FinalBoss(self.conn)
                 # self.final_boss_spawned = True  # Ensure it only spawns once
 

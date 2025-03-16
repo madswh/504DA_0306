@@ -1,10 +1,8 @@
-
-
-
 import unittest
 import numpy as np
-from dungeon import Dungeon
-from room import Room
+import sqlite3
+from SOURCE_CODE_0307_VERSION_1.model.dungeon import Dungeon
+from SOURCE_CODE_0307_VERSION_1.model.room import Room
 
 class TestDungeon(unittest.TestCase):
 

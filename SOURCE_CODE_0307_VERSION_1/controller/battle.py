@@ -48,6 +48,31 @@ class Battle:
             except ValueError:
                 self.report("Invalid input. Please enter a number.")
 
+    def use_special_skill(self):
+        result = self.hero.special_skill()
+        if result:
+            if isinstance(self.hero,Warrior):
+                self.monster.get_hit(result)
+                self.report(f'{self.hero.name} delivers a Crushing Blow to {self.monster.name} for {result} damage!')
+                return
+            elif isinstance(self.hero,Priestess):
+                self.report(f'{self.hero.name} administered a healing spell to themself for {result} hp!')
+                return
+            elif isinstance(self.hero,Thief):
+                if result[1] != 'none':
+                    if result[1] == 'surprise':
+                        self.monster.get_hit(result[0])
+                        self.report(f'{self.hero.name} Snuck Up On {self.monster.name} for {result[0]} damage! You get another turn.')
+                        second_turn = self.thief_second_turn()
+                        if second_turn == 'quit':                 
+                            self.report('You decided to forfeit the battle.')
+                            return
+                    if result[1] == 'normal':
+                        self.monster.get_hit(result[0])
+                        self.report(f'{self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.')
+                        return
+                else: self.report(f"{self.hero.name}'s sneak-attack didnt work.")
+     
     def thief_second_turn(self):
         while True:
             choice = self.get_valid_player_choice()
@@ -65,6 +90,52 @@ class Battle:
                 return
             elif choice == 3: self.report(f'You cannot do sneak attack on a second turn, try again.')
             elif choice == 4: return 'quit'
+    
+    def hero_turn(self):
+        choice = self.get_valid_player_choice()
+        self.view.clear_screen()
+        if choice == 1:  # Player chooses to attack
+            if self.hero.attack(self.monster):
+                self.report(
+                    f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
+            else:
+                self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
+
+        elif choice == 2:
+            self.controller.use_potion(self.view.get_potion_type())
+            self.report(f'{self.hero.name} used a potion.')
+
+        elif choice == 3: #special skill
+            self.use_special_skill()
+                    
+        elif choice == 4:
+            self.report('You decided to forfeit the battle.')
+            return False
+        
+    def monster_turn(self):
+        if self.monster.hit_points > 0:
+            string = ""
+            if random.choice([True, False]):
+                if self.monster.attack(self.hero):
+                    string = f'{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.'
+                else:
+                    string = f'{self.monster.name} tried to attack you, but failed.'
+            elif self.monster.heal():
+                string = f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
+
+            if string:
+                self.report(string)
+        else: return False
+    
+    def handle_monster_death(self):
+        if self.monster.is_boss:
+            self.controller.defeated_bosses += 1
+
+        self.controller.current_room.monster = None
+        self.monster = None
+
+        if self.controller.current_room.pillar:
+            self.controller.collect_pillar()
         
     def battle(self):
         """
@@ -73,84 +144,10 @@ class Battle:
         while True:
             self.view.display_both_stats(self.monster)
 
-            # ✅ Fix: Only display monster status if the monster is still alive
-            # if self.monster:
-            #     self.view.display_monster_status(self.monster)
-
-            choice = self.get_valid_player_choice()
-            self.view.clear_screen()
-            if choice == 1:  # Player chooses to attack
-                if self.hero.attack(self.monster):
-                    self.report(
-                        f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
-                else:
-                    self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
-
-            elif choice == 2:
-                self.controller.use_potion(self.view.get_potion_type())
-                self.report(f'{self.hero.name} used a potion.')
-
-            elif choice == 3: #special skill
-                result = self.hero.special_skill()
-                if result:
-                    if isinstance(self.hero,Warrior):
-                        self.monster.get_hit(result)
-                        self.report(f'{self.hero.name} delivers a Crushing Blow to {self.monster.name} for {result} damage!')
-                    elif isinstance(self.hero,Priestess):
-                        self.report(f'{self.hero.name} administered a healing spell to themself for {result} hp!')
-                    elif isinstance(self.hero,Thief):
-                        if result[1] != 'none':
-                            if result[1] == 'surprise':
-                                self.monster.get_hit(result[0])
-                                self.report(f'{self.hero.name} Snuck Up On {self.monster.name} for {result[0]} damage! You get another turn.')
-                                second_turn = self.thief_second_turn()
-                                if second_turn == 'quit':                 
-                                    self.report('You decided to forfeit the battle.')
-                                    break
-                            if result[1] == 'normal':
-                                self.monster.get_hit(result[0])
-                                self.report(f'{self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.')
-                        else: self.report(f"{self.hero.name}'s sneak-attack didnt work.")
-                        
-            elif choice == 4:
-                self.report('You decided to forfeit the battle.')
-                break
-
-            # ✅ Ensure the battle ends when the monster reaches 0 HP
-            if self.monster and self.monster.hit_points <= 0:
-                self.view.display_message(f"{self.monster.name} has been defeated!")
-                self.view.someone_died(self.monster, 0)
-
-                # ✅ If the monster is a boss, increment defeated bosses count
-                if self.monster.is_boss:
-                    self.controller.defeated_bosses += 1  # Track boss defeats
-
-                # ✅ Ensure the monster is removed properly
-                self.controller.current_room.monster = None
-                self.monster = None  # Prevent further actions on the monster
-
-                # ✅ If a pillar exists in this room, collect it
-                if self.controller.current_room.pillar:
-                    self.controller.collect_pillar()
-
-                break  # Ensure the battle function exits immediately
-
-            # ✅ Monster's turn if still alive
-            if self.monster and self.monster.hit_points > 0:
-                string = ""  # ✅ Fix: Initialize string to avoid UnboundLocalError
-
-                if random.choice([True, False]):
-                    if self.monster.attack(self.hero):
-                        string = f'{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.'
-                    else:
-                        string = f'{self.monster.name} tried to attack you, but failed.'
-                elif self.monster.heal():
-                    string = f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
-
-                if string:  # ✅ Now "string" will always be defined
-                    self.report(string)
-
-            # ✅ Ensure hero death is properly handled
+            if self.hero_turn() == False: break
             if self.hero.hit_points <= 0:
-                self.view.someone_died(self.hero, 1)
                 break
+            if self.monster_turn() == False:
+                self.report(f"{self.monster.name} has been defeated!")
+                self.handle_monster_death()
+                break  # Ensure the battle function exits immediately
