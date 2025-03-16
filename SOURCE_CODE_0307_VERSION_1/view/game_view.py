@@ -66,7 +66,7 @@ class GameView:
             print(f"Hit Points: {self.hero.hit_points}")
             print(f"Healing Potions: {self.hero.healing_potions}")
             print(f"Vision Potions: {self.hero.vision_potions}")
-            print(f"Pillars Found: {[i.name_of_item for i in self.hero.pillars]}")
+            print(f"Pillars Found: {[i.name for i in self.hero.pillars]}")
             print(f"--- End of Player Status ---\n")
 
     def display_monster_status(self,monster):
@@ -80,21 +80,7 @@ class GameView:
             print(f'Hit Points:         {self.hero.hit_points}                         {opponent.hit_points}')
             print(f'Healing Potions:    {self.hero.healing_potions}')
             print(f'Vision Potions:     {self.hero.vision_potions}')
-            print(f'Pillars found:      {[i.name_of_item for i in self.hero.pillars]}')
         
-    
-    # def show_battle_result(self, attacker, defender, damage):
-    #     print(f"\n{self.hero.name} the {attacker.name} attacks {defender.name} for {damage} damage!")
-    #     print(f"\n--- Current HP Status ---")
-    #     print(f"{self.hero.name} the {attacker.name} HP: {attacker.hit_points} \nVS.")
-    #     print(f"{defender.name} HP: {defender.hit_points}")
-    #     print(f"--- End of HP Status ---\n")
-    #     if defender.hit_points <= 0:
-    #         print(f"\n{defender.name} has been defeated!\n")
-
-    # def display_monster_attack(self, monster, damage):
-    #     print(f"\n{monster.name} attacks you for {damage} damage!")
-
     def get_player_action(self,battle=False):
         while True:
             if not battle:
@@ -125,10 +111,6 @@ class GameView:
             potion_choice = int(input("Please enter the number corresponding to your potion: "))
             if potion_choice in [1,2]: return potion_choice
             print("Invalid input! Please enter 1 or 2.")
-
-    def someone_died(self,character,int):
-        if int == 0: print(f'{character.name} has died.')
-        else: print('You died.')
     
     def confirm_quit(self):
         self.display_message("Are you sure you want to quit?")

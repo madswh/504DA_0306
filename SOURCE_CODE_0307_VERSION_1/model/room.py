@@ -119,7 +119,7 @@ class Room:
         ✅ Ensure a boss monster guards each pillar.
         """
         # ✅ If the room gets a pillar, assign a boss monster
-        if random.random() < 1:
+        if random.random() < 0.5:
             self.pillar = self.__pillar_factory.place_pillar() #either pillar or None
             if self.pillar:
                 self.monster = self.__monster_factory.create_boss_monster()
@@ -155,11 +155,11 @@ class Room:
         center_symbols = []
 
         if self.is_entrance:
-            center_symbols.append("i")
+            center_symbols.append("entrance")
         if self.is_exit:
-            center_symbols.append("O")
+            center_symbols.append("exit")
         if self.pillar:
-            center_symbols.append(self.pillar.name[0].upper())  # Use name from Pillar.
+            center_symbols.append(self.pillar.name)  # Use name from Pillar.
         if self.healing_potion:
             center_symbols.append("H")
         if self.vision_potion:

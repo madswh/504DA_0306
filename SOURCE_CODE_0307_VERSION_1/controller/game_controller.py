@@ -115,7 +115,7 @@ class GameController:
     def check_for_pillar(self, current_room):
         """Check if there is a pillar in the current room and handle collection."""
         if current_room.pillar and current_room.monster:
-            self.view.display_message(f"\nThe {current_room.monster.name} is guarding the Pillar of {current_room.pillar.name_of_item}.\nDefeat the {current_room.monster.name} to collect it.")
+            self.view.display_message(f"\nThe {current_room.monster.name} is guarding the Pillar of {current_room.pillar.name}.\nDefeat the {current_room.monster.name} to collect it.")
         elif current_room.pillar:
             self.collect_pillar()
 
@@ -197,7 +197,7 @@ class GameController:
         """Collect a pillar if present in the current room."""
         if self.current_room.pillar:
             self.hero.pillars.append(self.current_room.pillar)
-            self.view.display_message(f"\nYou have collected the {self.current_room.pillar.name_of_item} pillar!")
+            self.view.display_message(f"\nYou have collected the {self.current_room.pillar.name} pillar!")
             self.current_room.pillar = None  # Remove pillar from the room
 
     def use_potion(self,int):
