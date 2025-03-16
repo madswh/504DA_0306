@@ -1,8 +1,9 @@
 import numpy as np
 from collections import deque
 from SOURCE_CODE_0307_VERSION_1.model.room import Room
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.monster_factory import MonsterFactory
-from SOURCE_CODE_0307_VERSION_1.model.items.pillar_factory import PillarFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.monster_factory import MonsterFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.pillar_factory import PillarFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.potion_factory import PotionFactory
 
 class Dungeon:
     def __init__(self, db_conn, width=5, height=5):
@@ -11,7 +12,8 @@ class Dungeon:
         self.__height = height
         self.monster_factory = MonsterFactory(self.conn)
         self.pillar_factory = PillarFactory()
-        self.__grid = np.array([[Room(self.monster_factory,self.pillar_factory) for _ in range(width)] for _ in range(height)])
+        self.potion_factory = PotionFactory()
+        self.__grid = np.array([[Room(self.monster_factory,self.pillar_factory,self.potion_factory) for _ in range(width)] for _ in range(height)])
         self.set_entrance_exit()
         self.fill_rooms_with_stuff()
 

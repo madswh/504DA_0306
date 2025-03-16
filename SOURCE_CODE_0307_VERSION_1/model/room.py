@@ -1,12 +1,11 @@
 import random
-from SOURCE_CODE_0307_VERSION_1.model.items.pillar import Pillar
-from SOURCE_CODE_0307_VERSION_1.model.items.potion import Potion
-from SOURCE_CODE_0307_VERSION_1.model.items.other_potion import OtherPotion
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.environmental_element import EnvironmentalElement
+from SOURCE_CODE_0307_VERSION_1.model.factories.potion_factory import PotionFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.monster_factory import MonsterFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.pillar_factory import PillarFactory
 
 
 class Room:
-    def __init__(self, monster_factory, pillar_factory):
+    def __init__(self, monster_factory:MonsterFactory, pillar_factory:PillarFactory,potion_factory:PotionFactory):
         self.__healing_potion = None
         self.__vision_potion = None
         self.__other_potion = None
@@ -19,6 +18,7 @@ class Room:
 
         self.__monster_factory = monster_factory
         self.__pillar_factory = pillar_factory
+        self.__potion_facotry = potion_factory
         self.__pillar = None
         self.__monster = None
         self.__items = []  # Initialize the items list.
@@ -119,35 +119,36 @@ class Room:
         ✅ Ensure a boss monster guards each pillar.
         """
         # ✅ If the room gets a pillar, assign a boss monster
-        if random.random() < 1 and not self.pit:
-            self.pillar = self.__pillar_factory.place_pillar()
-            if self.pillar: #could be none after 4 pillars are placed. there are only 4 bosses available
+        if random.random() < 1:
+            self.pillar = self.__pillar_factory.place_pillar() #either pillar or None
+            if self.pillar:
                 self.monster = self.__monster_factory.create_boss_monster()
                 self.items.append(self.pillar)
                 self.items.append(self.monster)
 
-        # ✅ Ensure a pillar and a monster are NOT in a pit room
-        if random.random() < 0.5 and not self.pillar and not self.monster:
-            self.pit = EnvironmentalElement('X')
-            self.items.append(self.pit)
-
         #ensure some rooms have regular monsters, without a pit
-        if random.random() < 0.5 and not self.monster and not self.pit:
+        if random.random() < 0.5 and not self.monster:
             self.monster = self.__monster_factory.create_monster()
             self.items.append(self.monster)
         
-        # ✅ Randomly add potions
+        #ensure some monster-less rooms have a pit
+        if random.random() < 0.5 and not self.monster:
+            self.pit = self.__potion_facotry.make_other_potion('P')
+            self.items.append(self.pit)
+            
+        #potions can go anywhere
         if random.random() < 0.5:
-            self.healing_potion = Potion('H')
+            self.healing_potion = self.__potion_facotry.make_healing_potion()
             self.items.append(self.healing_potion)
 
         if random.random() < 0.5:
-            self.vision_potion = Potion('V')
+            self.vision_potion = self.__potion_facotry.make_vision_potion()
             self.items.append(self.vision_potion)
 
-        if random.random() < 0.5 and not self.pillar and not self.pit:
-            self.other_potion = OtherPotion()
+        if random.random() < 0.3:
+            self.other_potion = self.__potion_facotry.make_other_potion(random.choice(['A','M']))
             self.items.append(self.other_potion)
+
 
     def __str__(self):
         """ ✅ Updated room display to ensure correct feature representation. """
@@ -158,7 +159,7 @@ class Room:
         if self.is_exit:
             center_symbols.append("O")
         if self.pillar:
-            center_symbols.append(self.pillar.name_of_item[0].upper())  # Use name from Pillar.
+            center_symbols.append(self.pillar.name[0].upper())  # Use name from Pillar.
         if self.healing_potion:
             center_symbols.append("H")
         if self.vision_potion:
@@ -179,7 +180,7 @@ class Room:
         if self.monster:
             features.append(str(self.monster.name))
         if self.pillar:
-            features.append(str(self.pillar.name_of_item))
+            features.append(str(self.pillar.name))
         if self.healing_potion:
             features.append(str(self.healing_potion))
         if self.vision_potion:

@@ -3,7 +3,6 @@ from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
 from SOURCE_CODE_0307_VERSION_1.model.characters.gremlin import Gremlin
 from SOURCE_CODE_0307_VERSION_1.model.characters.skeleton import Skeleton
 from SOURCE_CODE_0307_VERSION_1.model.characters.mind_leech import MindLeech
-from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
 from SOURCE_CODE_0307_VERSION_1.model.characters.final_boss import FinalBoss
 
 class MonsterFactory:

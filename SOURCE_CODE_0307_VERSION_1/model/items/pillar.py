@@ -1,17 +1,18 @@
-from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.item_factory import ItemFactory
+from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.item import Item
 
-class Pillar(ItemFactory):
+class Pillar(Item):
+    NAMES = {
+        'A': 'Abstraction',
+        'E': 'Encapsulation',
+        'I': 'Inheritance',
+        'P': 'Polymorphism'
+    }
     def __init__(self, name):
-        name_map = {
-            'A': 'Abstraction',
-            'E': 'Encapsulation',
-            'I': 'Inheritance',
-            'P': 'Polymorphism'
-        }
-        super().__init__(name_map.get(name, 'Unknown'))
+        self.__name = self.NAMES.get(name, 'Unknown')
 
+    @property
+    def name(self):
+        return self.__name
+    
     def __str__(self):
-        return (
-            f"\nInventory Item(Pillar): \n"
-            f"{self.name_of_item}"  # not item_name
-        )
+        return f'Pillar of {self.name}'

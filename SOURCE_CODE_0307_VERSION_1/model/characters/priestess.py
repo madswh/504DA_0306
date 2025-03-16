@@ -51,21 +51,18 @@ class Priestess(Hero):
     def block(self):
         return random.random() <= self.__chance_to_block
     
-    def handle_other_potion(self, potion_name, opponent_name):
-        if potion_name == 'Poison':
-            damage = random.randint(10, 30)
-            self.hit_points -= damage
-            return f"You were poisoned by {opponent_name} and took {damage} damage!"
+    def handle_other_potion(self, potion_name):
 
-        elif potion_name == 'Medicine':
+        if potion_name == 'Medicine':
             heal = random.randint(10, 20)
             self.hit_points += heal
-            return f"You used Medicine and restored {heal} HP from the Poison inflicted by {opponent_name}!"
+            return f"The universe is on your side ~ fate has granted you {heal} HP!"
 
-        elif potion_name == 'Agility Potion':
-            dodge_speed = random.randint(5, 15)
-            return f"You picked up an Agility potion and dodged an attack with a speed of {dodge_speed} from {opponent_name}!"
-
+        elif potion_name == 'Agility':
+            block = random.random()
+            self.chance_to_block += block
+            return f"The air must be caffienated ~ your defense ability has increased by {block}!"
+        
         return None
     
     def special_skill(self):

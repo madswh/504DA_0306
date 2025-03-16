@@ -87,18 +87,6 @@ class GameController:
         self.view.hero = self.hero
         self.play()
 
-    def check_for_potions(self, current_room):
-        """Check if the current room contains potions and update the hero's inventory."""
-        if current_room.healing_potion:
-            self.hero.healing_potions += 1
-            current_room.healing_potion = None
-            self.view.display_message("\nYou collected a Healing Potion!")
-
-        if current_room.vision_potion:
-            self.hero.vision_potions += 1
-            current_room.vision_potion = None
-            self.view.display_message("\nYou collected a Vision Potion!")
-
     def choose_hero(self, choice):
         """Choose the hero class based on user input."""
         if choice == 1:
@@ -111,6 +99,18 @@ class GameController:
             self.view.display_message("Invalid choice! Please select a valid hero class.")
             return
         self.view.hero = self.hero
+        
+    def check_for_potions(self, current_room):
+        """Check if the current room contains potions and update the hero's inventory."""
+        if current_room.healing_potion:
+            self.hero.healing_potions += 1
+            current_room.healing_potion = None
+            self.view.display_message("\nYou collected a Healing Potion!")
+
+        if current_room.vision_potion:
+            self.hero.vision_potions += 1
+            current_room.vision_potion = None
+            self.view.display_message("\nYou collected a Vision Potion!")
 
     def check_for_pillar(self, current_room):
         """Check if there is a pillar in the current room and handle collection."""
@@ -118,6 +118,23 @@ class GameController:
             self.view.display_message(f"\nThe {current_room.monster.name} is guarding the Pillar of {current_room.pillar.name_of_item}.\nDefeat the {current_room.monster.name} to collect it.")
         elif current_room.pillar:
             self.collect_pillar()
+
+    def handle_pits(self, current_room):
+        """Handle pits found in the current room."""
+        if current_room.pit:
+            pit_damage = random.randint(20, 50)
+            str1 = f"The air in this room is sulphurous ~ you took {pit_damage} damage!"
+            str2 = f"You fell into a pit and took {pit_damage} damage!"
+            self.hero.hit_points -= pit_damage
+            current_room.pit = None
+            self.view.display_message(random.choice([str1,str2]))
+
+    def handle_other_potions(self, current_room):
+        """Handle other types of potions found in the current room."""
+        if current_room.other_potion:
+            potion_effect = self.hero.handle_other_potion(current_room.other_potion.name)
+            self.view.display_message(potion_effect)
+            current_room.other_potion = None  # Remove the potion from the room
 
     def display_current_room_contents(self):
         """Display the contents of the current room."""
@@ -151,6 +168,7 @@ class GameController:
         self.current_location = new_loc
         self.current_room = self.dungeon.get_room(*self.current_location)
         self.current_room.is_visited = True  # Mark this room as visited.
+        self.travel_history = direction
 
     def calculate_new_location(self, x, y, direction):
         """Calculate the new location based on the current location and direction.
@@ -172,33 +190,9 @@ class GameController:
         elif direction == 4:
             return x, y - 1
 
-    def show_available_directions(self):
-        string = 'Available directions: '
-        if self.current_room.north: string += 'N '
-        if self.current_room.south: string += 'S '
-        if self.current_room.east: string += 'E '
-        if self.current_room.west: string += 'W '
-        self.view.display_message(string)
+    def show_previous_direction(self):
+        self.view.display_message(f'Previously traveled direction: {self.travel_history}')
     
-    def handle_pits(self, current_room):
-        """Handle pits found in the current room."""
-        if current_room.pit:
-            pit_damage = random.randint(20, 50)
-            self.hero.hit_points -= pit_damage
-            current_room.pit = None
-            self.view.display_message(f"\nYou fell into a pit and took {pit_damage} damage!")
-
-    def handle_other_potions(self, current_room):
-        """Handle other types of potions found in the current room."""
-        if current_room.other_potion:
-            potion_effect = self.hero.handle_other_potion(
-                current_room.other_potion.name_of_item,
-                current_room.monster.name if current_room.monster else None
-            )
-            self.view.display_message(f"\nYou found a {current_room.other_potion.name_of_item} Potion!")
-            self.view.display_message(potion_effect)
-            current_room.other_potion = None  # Remove the potion from the room
-
     def collect_pillar(self):
         """Collect a pillar if present in the current room."""
         if self.current_room.pillar:
@@ -220,7 +214,7 @@ class GameController:
     def play(self):
         """Main game loop to handle the game play."""
         self.view.display_message("\nYour Dungeon Adventure starts here!")
-
+        self.travel_history = None
         while True:
             self.current_room = self.dungeon.get_room(*self.current_location)
 
@@ -235,7 +229,7 @@ class GameController:
             self.view.clear_screen()
             
             if action == 1:  # Move
-                self.show_available_directions()
+                if self.travel_history: self.show_previous_direction()
                 self.move_adventurer(self.view.get_move_direction())
                 self.view.clear_screen()
                 if self.hero.hit_points <= 0:
