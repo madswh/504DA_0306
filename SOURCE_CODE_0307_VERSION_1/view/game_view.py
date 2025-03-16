@@ -84,13 +84,17 @@ class GameView:
     def get_player_action(self,battle=False):
         while True:
             if not battle:
-                action = int(input('''\nPlease choose an action:\n1. Move\n2. Battle\n3. Use Potion\n4. Quit\n'''))
-                if action in [1,2,3,4]: return action
-                print("Invalid action! Please choose 1 (Move), 2 (Battle), 3 (Use Potion), or 4 (Quit).")
+                try:
+                    action = int(input('''\nPlease choose an action:\n1. Move\n2. Battle\n3. Use Potion\n4. Quit\n'''))
+                    if action in [1,2,3,4]: return action
+                except ValueError as e:
+                    if e: print("Invalid action! Please choose 1 (Move), 2 (Battle), 3 (Use Potion), or 4 (Quit).")
             else:
-                action = int(input(f'''\nPlease choose an action:\n1. Attack\n2. Use Potion\n3. Use Special Skill ({self.hero.skill_name})\n4. Quit Battle\n'''))
-                if action in [1,2,3,4]: return action
-                print("Invalid action! Please choose 1 (Attack), 2 (Use Potion), 3 (Use Skill) 4 (Quit Battle).")
+                try:
+                    action = int(input(f'''\nPlease choose an action:\n1. Attack\n2. Use Potion\n3. Use Special Skill ({self.hero.skill_name})\n4. Quit Battle\n'''))
+                    if action in [1,2,3,4]: return action
+                except ValueError as e:
+                    if e: print("Invalid action! Please choose 1 (Attack), 2 (Use Potion), 3 (Use Skill) 4 (Quit Battle).")
                
     def get_move_direction(self):
         print("Please choose a direction:")
@@ -99,18 +103,24 @@ class GameView:
         print("3. East (E)")
         print("4. West (W)")
         while True:
-            direction = int(input("Please enter the number corresponding to your direction: "))
-            if direction in [1,2,3,4]: return direction
-            print("Invalid input! Please enter 1, 2, 3, or 4.")
+            try:
+                direction = int(input("Please enter the number corresponding to your direction: "))
+                if direction in [1,2,3,4]:
+                    return direction
+            except ValueError as e:
+                if e: print("Invalid input! Please enter 1, 2, 3, or 4.")
+
 
     def get_potion_type(self):
         print("Choose a potion to use:")
         print("1. Healing Potion")
         print("2. Vision Potion")
         while True:
-            potion_choice = int(input("Please enter the number corresponding to your potion: "))
-            if potion_choice in [1,2]: return potion_choice
-            print("Invalid input! Please enter 1 or 2.")
+            try:
+                potion_choice = int(input("Please enter the number corresponding to your potion: "))
+                if potion_choice in [1,2]: return potion_choice
+            except ValueError as e:
+                if e: print("Invalid input! Please enter 1 or 2.")
     
     def confirm_quit(self):
         self.display_message("Are you sure you want to quit?")
@@ -118,13 +128,14 @@ class GameView:
         self.display_message("2. No")
 
         while True:
-            choice = input("\nPlease enter the number corresponding to your choice: ").strip()
-            if choice == "1":
-                return True
-            elif choice == "2":
-                return False
-            else:
-                self.display_message("Invalid choice! Please enter 1 for Yes or 2 for No.")
+            try:
+                choice = int(input("\nPlease enter the number corresponding to your choice: "))
+                if choice == 1:
+                    return True
+                elif choice == 2:
+                    return False
+            except ValueError as e:
+                if e: self.display_message("Invalid choice! Please enter 1 for Yes or 2 for No.")
 
     def display_message(self, message):
         print(message)
