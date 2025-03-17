@@ -71,7 +71,7 @@ class Warrior(Hero):
 
     def special_skill(self):
         if random.random() <= 0.4:
-            damage = random.randint(75, 175)
+            damage = random.randint(175, 375)
             return damage
         return None
     
