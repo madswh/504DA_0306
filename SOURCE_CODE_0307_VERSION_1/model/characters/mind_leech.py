@@ -45,16 +45,29 @@ class MindLeech(Monster):
 
     def fill_stats(self):
         data = self.get_stats()
-        self.hit_points = data[1]
-        self.min_damage = data[2]
-        self.max_damage = data[3]
-        self.attack_speed = data[4]
-        self.min_heal = data[5]
-        self.max_heal = data[6]
-        self.chance_to_hit = data[7]
-        self.chance_to_heal = data[8]
-        self.is_boss = data[9]
-        self.flavor_text = data[10]
+        self.hit_points = int(data[1])
+        self.min_damage = int(data[2])
+        self.max_damage = int(data[3])
+        self.attack_speed = int(data[4])
+        self.min_heal = int(data[5])  # Ensure integer
+        self.max_heal = int(data[6])  # Ensure integer
+        self.chance_to_hit = float(data[7])
+        self.chance_to_heal = float(data[8])
+        self.is_boss = bool(data[9])
+        self.flavor_text = str(data[10])
+
+    # def fill_stats(self):
+    #     data = self.get_stats()
+    #     self.hit_points = data[1]
+    #     self.min_damage = data[2]
+    #     self.max_damage = data[3]
+    #     self.attack_speed = data[4]
+    #     self.min_heal = data[5]
+    #     self.max_heal = data[6]
+    #     self.chance_to_hit = data[7]
+    #     self.chance_to_heal = data[8]
+    #     self.is_boss = data[9]
+    #     self.flavor_text = data[10]
 
     def attack(self, opponent):
         if self.can_hit():
