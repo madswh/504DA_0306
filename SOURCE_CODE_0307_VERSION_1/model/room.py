@@ -5,7 +5,7 @@ from SOURCE_CODE_0307_VERSION_1.model.factories.pillar_factory import PillarFact
 
 
 class Room:
-    def __init__(self, monster_factory:MonsterFactory, pillar_factory:PillarFactory,potion_factory:PotionFactory):
+    def __init__(self, monster_factory:MonsterFactory, pillar_factory:PillarFactory,potion_factory:PotionFactory,initialize_contents=True):
         self.__healing_potion = None
         self.__vision_potion = None
         self.__other_potion = None
@@ -23,7 +23,9 @@ class Room:
         self.__monster = None
         self.__items = []  # Initialize the items list.
 
-
+        # if initialize_contents:
+            # self.initialize_room_contents()
+        
         # Initialize door state whether it is open or closed.
         self.__north = random.choice([True, False])
         self.__east = random.choice([True, False])
