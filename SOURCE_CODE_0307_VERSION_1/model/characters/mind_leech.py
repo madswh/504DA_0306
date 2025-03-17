@@ -18,30 +18,30 @@ class MindLeech(Monster):
         self.conn = db_conn
         self.fill_stats()
 
-    def get_stats(self):
-        cursor = self.conn.cursor()
-        data = []
-
-        # Print the exact values being queried
-        print(f"🔍 Querying database for name='{self.name}' and is_boss={self.is_boss}")
-
-        for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name, self.is_boss)):
-            data.append(i)
-
-        # Print what the query returns
-        print(f"📊 Query result: {data}")
-
-        if not data:
-            raise ValueError(
-                f"❌ No monster found with name='{self.name}' and is_boss={self.is_boss}. Check database entries!")
-
-        return data[0]
-
     # def get_stats(self):
     #     cursor = self.conn.cursor()
     #     data = []
-    #     for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name,self.is_boss)): data.append(i)
+    #
+    #     # Print the exact values being queried
+    #     print(f"🔍 Querying database for name='{self.name}' and is_boss={self.is_boss}")
+    #
+    #     for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name, self.is_boss)):
+    #         data.append(i)
+    #
+    #     # Print what the query returns
+    #     print(f"📊 Query result: {data}")
+    #
+    #     if not data:
+    #         raise ValueError(
+    #             f"❌ No monster found with name='{self.name}' and is_boss={self.is_boss}. Check database entries!")
+    #
     #     return data[0]
+
+    def get_stats(self):
+        cursor = self.conn.cursor()
+        data = []
+        for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name,self.is_boss)): data.append(i)
+        return data[0]
 
     def fill_stats(self):
         data = self.get_stats()

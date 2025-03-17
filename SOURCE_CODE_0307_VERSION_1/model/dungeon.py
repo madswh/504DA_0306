@@ -17,6 +17,14 @@ class Dungeon:
         self.set_entrance_exit()
         self.fill_rooms_with_stuff()
 
+
+    def __getstate__(self):
+        # Create a copy of the object's state
+        state = self.__dict__.copy()
+        # Remove the connection from the state as it is not pickleable
+        del state['conn']
+        return state
+
     @property
     def width(self):
         return self.__width
@@ -127,14 +135,15 @@ class Dungeon:
         # Join all rows with newline characters.
         print("\n".join(dungeon_representation))
 
-
-# Test Case for Functionality:
-if __name__ == '__main__':
-    dungeon = Dungeon(width=5, height=5)
-    if dungeon.bfs((0, 0), (4, 4)):
-        print("\nA path exists from the entrance to the exit.\n")
-    else:
-        print("\nNo path exists from the entrance to the exit.\n")
-
-    # Dummy player position, e.g., (0, 0) for testing.
-    dungeon.display_dungeon((0, 0))
+'''
+# # Test Case for Functionality:
+# if __name__ == '__main__':
+#     dungeon = Dungeon(width=5, height=5)
+#     if dungeon.bfs((0, 0), (4, 4)):
+#         print("\nA path exists from the entrance to the exit.\n")
+#     else:
+#         print("\nNo path exists from the entrance to the exit.\n")
+#
+#     # Dummy player position, e.g., (0, 0) for testing.
+#     dungeon.display_dungeon((0, 0))
+'''

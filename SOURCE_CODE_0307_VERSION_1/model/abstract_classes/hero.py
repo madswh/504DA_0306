@@ -4,6 +4,7 @@ from SOURCE_CODE_0307_VERSION_1.data.database import create_connection
 
 class Hero(DungeonCharacter,ABC):
     def __init__(self):
+        super().__init__()
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
@@ -33,7 +34,7 @@ class Hero(DungeonCharacter,ABC):
         pass
     
     @abstractmethod
-    def handle_other_potion(self, potion_name, opponent_name):
+    def handle_other_potion(self, potion_name):
         pass
     
     @abstractmethod

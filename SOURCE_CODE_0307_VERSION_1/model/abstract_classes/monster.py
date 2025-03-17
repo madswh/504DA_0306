@@ -5,6 +5,7 @@ from SOURCE_CODE_0307_VERSION_1.data.database import create_connection
 
 class Monster(DungeonCharacter,ABC):
     def __init__(self):
+        super().__init__()
         self.__name = 'Monster'
         self.__hit_points = 0
         self.__min_damage = 0
