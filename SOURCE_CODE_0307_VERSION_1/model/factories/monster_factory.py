@@ -34,8 +34,6 @@ class MonsterFactory:
 
         boss = random.choice(self.available_bosses)
         self.available_bosses.remove(boss)
-        string = f'{boss.name} Boss'
-        boss.name = string
         return boss
 
     def create_final_boss(self):
