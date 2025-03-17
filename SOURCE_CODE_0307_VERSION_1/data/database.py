@@ -3,7 +3,7 @@ import os
 
 # Define the correct path for the database
 database_path = os.path.join(os.path.dirname(__file__), "dungeon_game.sql")
-
+db_path = 'SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql'
 # Ensure the directory exists
 db_dir = os.path.dirname(database_path)
 if db_dir and not os.path.exists(db_dir):
@@ -196,7 +196,7 @@ def get_all_heroes(conn):
 
 def main():
     """Main function to set up the database and insert initial data."""
-    conn = DatabaseManager.get_connection()
+    conn = DatabaseManager.get_connection(db_path)
 
     if conn is not None:
         try:
