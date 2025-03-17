@@ -141,4 +141,7 @@ class GameView:
         print(message)
 
     def clear_screen(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        try:
+            os.system('cls' if os.name == 'nt' else 'clear')
+        except Exception:
+            print("\n" * 100)  # Fallback: Simulate clearing by printing blank lines
