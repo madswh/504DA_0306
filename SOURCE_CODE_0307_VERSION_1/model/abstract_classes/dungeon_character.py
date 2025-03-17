@@ -18,6 +18,7 @@ class DungeonCharacter(ABC):
         self.__max_heal = 0
         self.__is_boss = 0
         self.__flavor_text = 0
+        #self.__attack_speed = 0
 
         # Hero-specific attributes
         self.__chance_to_block = 0

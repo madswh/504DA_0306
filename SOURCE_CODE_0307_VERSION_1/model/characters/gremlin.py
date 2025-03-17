@@ -3,7 +3,7 @@ import random
 
 class Gremlin(Monster):
     def __init__(self,db_conn,boss=False):
-        self.__name = 'Gremlin'
+        self.__name = 'Gremlin' if not boss else 'Gremlin Boss'
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
@@ -11,28 +11,49 @@ class Gremlin(Monster):
         self.__max_heal = 0
         self.__chance_to_hit = 0
         self.__chance_to_heal = 0
+        self.__attack_speed = 0
         self.__is_boss = boss
         self.__flavor_text = 0
         self.conn = db_conn
         self.fill_stats()
-        
+
     def get_stats(self):
         cursor = self.conn.cursor()
         data = []
-        for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name,self.is_boss)): data.append(i)
+
+        # Print the exact values being queried
+        print(f"🔍 Querying database for name='{self.name}' and is_boss={self.is_boss}")
+
+        for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name, self.is_boss)):
+            data.append(i)
+
+        # Print what the query returns
+        print(f"📊 Query result: {data}")
+
+        if not data:
+            raise ValueError(
+                f"❌ No monster found with name='{self.name}' and is_boss={self.is_boss}. Check database entries!")
+
         return data[0]
+
+    # def get_stats(self):
+    #     cursor = self.conn.cursor()
+    #     data = []
+    #     for i in cursor.execute('SELECT * FROM monsters WHERE name =? AND is_boss =?', (self.name,self.is_boss)): data.append(i)
+    #     return data[0]
 
     def fill_stats(self):
         data = self.get_stats()
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.min_heal = data[4]
-        self.max_heal = data[5]
-        self.chance_to_hit = data[6]
-        self.chance_to_heal = data[7]
-        self.is_boss = data[8]
-        self.flavor_text = data[9]
+        self.attack_speed = data[4]
+        self.min_heal = data[5]
+        self.max_heal = data[6]
+        self.chance_to_hit = data[7]
+        self.chance_to_heal = data[8]
+        self.is_boss = data[9]
+        self.flavor_text = data[10]
 
     def attack(self, opponent):
         if self.can_hit():
@@ -124,3 +145,11 @@ class Gremlin(Monster):
     @flavor_text.setter
     def flavor_text(self,other):
         self.__flavor_text = other
+
+    @property
+    def attack_speed(self):
+        return self.__attack_speed
+
+    @attack_speed.setter
+    def attack_speed(self, speed):
+        self.__attack_speed = speed

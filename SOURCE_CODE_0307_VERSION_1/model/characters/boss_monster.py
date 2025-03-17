@@ -11,6 +11,7 @@ class BossMonster(Monster):
         self.__max_heal = 0
         self.__chance_to_hit = 0
         self.__chance_to_heal = 0
+        self.__attack_speed = 0
         self.__is_boss = boss
         self.__flavor_text = 0
         self.conn = db_conn
@@ -129,3 +130,11 @@ class BossMonster(Monster):
     @flavor_text.setter
     def flavor_text(self,other):
         self.__flavor_text = other
+
+    @property
+    def attack_speed(self):
+        return self.__attack_speed
+
+    @attack_speed.setter
+    def attack_speed(self, speed):
+        self.__attack_speed = speed

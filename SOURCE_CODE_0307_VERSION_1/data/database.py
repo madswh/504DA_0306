@@ -113,13 +113,13 @@ def initialize_monsters(conn):
                 ("Mind Leech", 120, 20, 45, 4, 0.75, 0.3, 25, 45, False, ""),
 
                 ("Ogre Boss", 500, 80, 120, 1, 0.7, 0.1, 50, 100, True,
-                 "The Ogre is more than muscle and rage—it is inevitability. A walking landslide, a storm given flesh. Bones will break, steel will bend, and nothing you know will protect you from the brute force of its will."),
+                 "The Ogre Boss is more than muscle and rage—it is inevitability. A walking landslide, a storm given flesh. Bones will break, steel will bend, and nothing you know will protect you from the brute force of its will."),
                 ("Gremlin Boss", 150, 40, 60, 5, 0.9, 0.5, 40, 60, True,
-                 "The Gremlin is a master of bloodlines and stolen legacies. It twists strength from those who came before, growing fiercer with every battle. You dared to challenge it—now suffer the wrath of a creature that inherits every advantage."),
+                 "The Gremlin Boss is a master of bloodlines and stolen legacies. It twists strength from those who came before, growing fiercer with every battle. You dared to challenge it—now suffer the wrath of a creature that inherits every advantage."),
                 ("Skeleton Boss", 250, 50, 80, 3, 0.85, 0.4, 50, 80, True,
-                 "The Skeleton has mastered the art of becoming many while remaining one. It shifts, reforms, and strikes from everywhere at once. You’ve entered its domain—now learn what it means to fight a foe that is never the same twice."),
+                 "The Skeleton Boss has mastered the art of becoming many while remaining one. It shifts, reforms, and strikes from everywhere at once. You’ve entered its domain—now learn what it means to fight a foe that is never the same twice."),
                 ("Mind Leech Boss", 300, 60, 100, 4, 0.85, 0.4, 60, 90, True,
-                 "The Mind Leech does not strike with claws or fangs—it burrows deep, unraveling reality thread by thread. Shadows whisper, memories turn against you, and the battlefield itself bends to its will. This is not just a fight. This is a descent into madness."),
+                 "The Mind Leech Boss does not strike with claws or fangs—it burrows deep, unraveling reality thread by thread. Shadows whisper, memories turn against you, and the battlefield itself bends to its will. This is not just a fight. This is a descent into madness."),
 
                 ("Final Boss", 1000, 100, 150, 1, 0.8, 0.2, 100, 150, True,
                  "You have fought, bled, and defied the odds to stand here. But strength alone is not enough. The Final Boss awaits—not just as an enemy, but as the ultimate question: Can you overcome the very limits that brought you this far? This is not just a battle. This is your reckoning."),

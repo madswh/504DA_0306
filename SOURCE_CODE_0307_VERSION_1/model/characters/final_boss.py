@@ -29,6 +29,7 @@ class FinalBoss(BossMonster):
                 self.__max_damage,
                 self.__min_heal,
                 self.__max_heal,
+                self.__attack_speed,
                 self.__chance_to_hit,
                 self.__chance_to_heal,
                 self.__is_boss,
