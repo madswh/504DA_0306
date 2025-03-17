@@ -1,25 +1,27 @@
 
 
 
+import random
 import unittest
-from room import Room
-from pillar import Pillar
-from potion import Potion
-from other_potion import OtherPotion
-from environmental_element import EnvironmentalElement
-from monster_factory import MonsterFactory, Ogre, Gremlin, Skeleton
+from SOURCE_CODE_0307_VERSION_1.model.room import Room
+from SOURCE_CODE_0307_VERSION_1.model.factories.pillar_factory import Pillar
+from SOURCE_CODE_0307_VERSION_1.model.factories.potion_factory import Potion
+from SOURCE_CODE_0307_VERSION_1.model.factories.monster_factory import MonsterFactory
 
 class TestRoom(unittest.TestCase):
     def setUp(self):
-        # Set up a new room instance for each test without random contents.
-        self.room = Room(initialize_contents=False)
+        # Set up a new room instance for each test with appropriate factories and without random contents.
+        self.monster_factory = MonsterFactory(random.choice(["Ogre", "Gremlin", "Skeleton", "MindLeech"]))
+        self.pillar_factory = Pillar(random.choice(["A", "E", "I", "P"]))
+        self.potion_factory = Potion(random.choice(["H", "V"]))
+        self.room = Room(self.monster_factory, self.pillar_factory, self.potion_factory, initialize_contents=False)
 
     def test_room_initialization(self):
         # Test the initialization of the room.
-        self.assertFalse(self.room.has_healing_potion)
-        self.assertFalse(self.room.has_vision_potion)
-        self.assertIsNone(self.room.has_other_potion)
-        self.assertFalse(self.room.has_pit)
+        self.assertIsNone(self.room.healing_potion)
+        self.assertIsNone(self.room.vision_potion)
+        self.assertIsNone(self.room.other_potion)
+        self.assertIsNone(self.room.pit)
         self.assertFalse(self.room.is_entrance)
         self.assertFalse(self.room.is_exit)
         self.assertIsNone(self.room.pillar)
@@ -37,20 +39,20 @@ class TestRoom(unittest.TestCase):
 
     def test_room_contents_with_pit(self):
         # Test checking room content for pit.
-        self.room.has_pit = True
-        self.assertTrue(self.room.has_pit)
+        self.room.pit = "X"
+        self.assertIsNotNone(self.room.pit)
 
     def test_room_contents_with_pillar_and_monster(self):
         # Test checking room content for pillar and a monsters, then assign them to the room.
-        self.room.pillar = Pillar('A')      
-        self.room.monster = Ogre('Ogre')    
+        self.room.pillar = Pillar("A")
+        self.room.monster = Ogre("Ogre")
         self.assertIsInstance(self.room.pillar, Pillar)
         self.assertIsInstance(self.room.monster, Ogre)
 
     def test_string_representation(self):
         # Test checking room content for string representation.
-        self.room.pillar = Pillar('A')
-        self.room.monster = Ogre('Ogre')
+        self.room.pillar = Pillar("A")
+        self.room.monster = Ogre("Ogre")
         self.room.is_entrance = True
         room_string = str(self.room)
         self.assertIn("Room Features:", room_string)
@@ -60,8 +62,8 @@ class TestRoom(unittest.TestCase):
 class TestItemFactory(unittest.TestCase):
     def setUp(self):
         # Set up a new item factory instance for testing.
-        self.pillar = Pillar('A')
-        self.potion = Potion('H')
+        self.pillar = Pillar("A")
+        self.potion = Potion("H")
         self.other_potion = OtherPotion()
         self.environmental_element = EnvironmentalElement('i')
 
@@ -97,7 +99,7 @@ class TestMonsterFactory(unittest.TestCase):
 
     def test_create_concrete_monster(self):
         # Test the concrete creation of a monster's presence.
-        monster = self.factory.create_monster('Gremlin')
+        monster = self.factory.create_monster("Gremlin")
         self.assertIsInstance(monster, Gremlin)
 
 if __name__ == '__main__':
