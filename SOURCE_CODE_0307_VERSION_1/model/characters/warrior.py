@@ -7,10 +7,11 @@ class Warrior(Hero):
         self.__hit_points = 0
         self.__min_damage = 0
         self.__max_damage = 0
-        self.__min_heal = 0
-        self.__max_heal = 0
+        self.__attack_speed = 0
         self.__chance_to_hit = 0
         self.__chance_to_block = 0
+        self.__min_heal = 0
+        self.__max_heal = 0
         
         self.vision_potions = 0
         self.healing_potions = 0
@@ -20,19 +21,19 @@ class Warrior(Hero):
 
     def get_stats(self):
         cursor = self.conn.cursor()
-        data = []
-        for i in cursor.execute('SELECT * FROM heroes WHERE name =?', (self.name,)): data.append(i)
-        return data[0]
+        data = cursor.execute('SELECT * FROM heroes WHERE name =?', (self.name,)).fetchone()
+        return data
 
     def fill_stats(self):
         data = self.get_stats()
         self.hit_points = data[1]
         self.min_damage = data[2]
         self.max_damage = data[3]
-        self.min_heal = data[4]
-        self.max_heal = data[5]
-        self.chance_to_hit = data[6]
-        self.chance_to_block = data[7]
+        self.attack_speed = data[4]
+        self.chance_to_hit = data[5]
+        self.chance_to_block = data[6]
+        self.min_heal = data[7]
+        self.max_heal = data[8]
         self.skill_name = 'Crushing Blow'
     
     def attack(self, opponent):
@@ -102,6 +103,13 @@ class Warrior(Hero):
     @max_damage.setter
     def max_damage(self,number):
         self.__max_damage = number
+        
+    @property
+    def attack_speed(self):
+        return self.__attack_speed
+    @attack_speed.setter
+    def attack_speed(self,other):
+        self.__attack_speed = other
     
     @property
     def chance_to_hit(self):
