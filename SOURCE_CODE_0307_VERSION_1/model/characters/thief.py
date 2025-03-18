@@ -64,9 +64,9 @@ class Thief(Hero):
             return f"The universe is on your side ~ fate has granted you {heal} HP!"
 
         elif potion_name == 'Agility':
-            block = random.random()
-            self.chance_to_block += block
-            return f"The air must be caffienated ~ your defense ability has increased by {block}!"
+            speed = random.randint(1,4)
+            self.attack_speed += speed
+            return f"The air must be caffienated ~ your attack speed has increased by {speed}!"
         
         return None
 
