@@ -48,30 +48,30 @@ class Battle:
             except ValueError:
                 self.report("Invalid input. Please enter a number.")
 
-    def use_special_skill(self,string):
+    def use_special_skill(self):
         result = self.hero.special_skill()
         if result:
             if isinstance(self.hero,Warrior):
                 self.monster.get_hit(result)
-                string += f'{self.hero.name} delivers a Crushing Blow to {self.monster.name} for {result} damage!'
-                return string
+                self.report(f'{self.hero.name} delivers a Crushing Blow to {self.monster.name} for {result} damage!')
+                return
             elif isinstance(self.hero,Priestess):
-                string += f'{self.hero.name} administered a healing spell to themself for {result} hp!'
-                return string
+                self.report(f'{self.hero.name} administered a healing spell to themself for {result} hp!')
+                return
             elif isinstance(self.hero,Thief):
                 if result[1] != 'none':
                     if result[1] == 'surprise':
                         self.monster.get_hit(result[0])
-                        string += f'{self.hero.name} Snuck Up On {self.monster.name} for {result[0]} damage! You get another turn.'
+                        self.report(f'{self.hero.name} Snuck Up On {self.monster.name} for {result[0]} damage! You get another turn.')
                         second_turn = self.thief_second_turn()
-                        if second_turn == 'quit':                 
-                            string += 'You decided to forfeit the battle.'
-                            return string
+                        if second_turn == 0:                 
+                            self.report('You decided to forfeit the battle.')
+                            return
                     if result[1] == 'normal':
                         self.monster.get_hit(result[0])
-                        string += f'{self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.'
-                        return string
-                else: string += f"{self.hero.name}'s sneak-attack didnt work."
+                        self.report(f'{self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.')
+                        return
+                else: self.report(f"{self.hero.name}'s sneak-attack didnt work.")
      
     def thief_second_turn(self):
         while True:
@@ -89,43 +89,37 @@ class Battle:
                 self.report(f'{self.hero.name} used a potion.')
                 return
             elif choice == 3: self.report(f'You cannot do sneak attack on a second turn, try again.')
-            elif choice == 4: return 'quit'
+            elif choice == 4: return 0
     
-    def hero_turn(self,int):
+    def hero_turn(self):
         if self.hero.hit_points <= 0: return False
         choice = self.get_valid_player_choice()
-        self.view.clear_screen()
-        string = f'Turn {int} of {self.hero.attack_speed}: '
         if choice == 1:  # Player chooses to attack
             if self.hero.attack(self.monster):
-                string += f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.'
+                self.report(f'{self.hero.name} attacked {self.monster.name}.\n{self.monster.name} now has {self.monster.hit_points} HP remaining.')
             else:
-                string += f'{self.hero.name} failed to attack {self.monster.name}.'
+                self.report(f'{self.hero.name} failed to attack {self.monster.name}.')
 
         elif choice == 2:
             self.controller.use_potion(self.view.get_potion_type())
-            string += f'{self.hero.name} used a potion.'
+            self.report(f'{self.hero.name} used a potion.')
 
         elif choice == 3: #special skill
-            string = self.use_special_skill(string)
+            self.use_special_skill()
         elif choice == 4:
-            string += 'You decided to forfeit the battle.'
+            self.report('You decided to forfeit the battle.')
             return False
-        self.report(string)
-        self.view.display_both_stats(self.monster)
         
-    def monster_turn(self,int):
+    def monster_turn(self):
         if self.monster.hit_points <= 0: return False
-        string = f"Turn {int} of {self.monster.attack_speed}: "
         if random.choice([True, False]):
             if self.monster.attack(self.hero):
-                string += f'{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.'
+                self.report(f'\n{self.monster.name} attacked you. You now have {self.hero.hit_points} HP remaining.')
             else:
-                string += f'{self.monster.name} tried to attack you, but failed.'
+                self.report(f'\n{self.monster.name} tried to attack you, but failed.')
         elif self.monster.heal():
-            string += f'{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.'
-        else: string += 'No action taken.'
-        self.report(string)
+            self.report(f'\n{self.monster.name} healed. {self.monster.name} now has {self.monster.hit_points} HP.')
+        else: self.report('\nNo action taken.')
     
     def handle_monster_death(self):
         if self.monster.is_boss:
@@ -136,19 +130,30 @@ class Battle:
 
         if self.controller.current_room.pillar:
             self.controller.collect_pillar()
-        
+                
     def battle(self):
         """
         Handle the battle logic between the hero and the monster.
         """
         while True:
-            self.view.display_both_stats(self.monster)
 
             for i in range(self.hero.attack_speed):
-                self.report(f'Turn {i+1} of {self.hero.attack_speed}')
-                if self.hero_turn(i+1) == False: break
-            for i in range(self.monster.attack_speed):
-                if self.monster_turn(i+1) == False:
+                self.report(f'\nYour turn {i+1} of {self.hero.attack_speed}:')
+                if self.hero_turn() == False: return
+                self.report('-'*100)
+                self.view.display_both_stats(self.monster)
+                if self.monster.hit_points <= 0:
                     self.report(f"{self.monster.name} has been defeated!")
                     self.handle_monster_death()
-                    break  # Ensure the battle function exits immediately
+                    return
+            
+            for i in range(self.monster.attack_speed):
+                self.report(f'\n{self.monster.name} turn {i+1} of {self.monster.attack_speed}:')
+                if self.monster_turn() == False:
+                    self.report(f"{self.monster.name} has been defeated!")
+                    self.handle_monster_death()
+                    return   
+                if self.hero.hit_points <= 0:
+                    self.report('You have been slain in battle, the game is over.')
+                    return
+                self.report('-'*100)
