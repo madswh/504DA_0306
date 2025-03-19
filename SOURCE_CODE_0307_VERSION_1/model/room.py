@@ -166,6 +166,8 @@ class Room:
             center_symbols += ("H")
         if self.vision_potion:
             center_symbols += ("V")
+        if self.other_potion:
+            center_symbols += ("O")
         if self.pit:
             center_symbols += ("X")
         if self.monster:

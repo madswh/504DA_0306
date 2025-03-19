@@ -5,8 +5,6 @@ from SOURCE_CODE_0307_VERSION_1.model.dungeon import Dungeon
 from SOURCE_CODE_0307_VERSION_1.model.characters.warrior import Warrior
 from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
 from SOURCE_CODE_0307_VERSION_1.model.characters.thief import Thief
-from SOURCE_CODE_0307_VERSION_1.model.characters.boss_monster import BossMonster
-from SOURCE_CODE_0307_VERSION_1.model.characters.final_boss import FinalBoss
 from SOURCE_CODE_0307_VERSION_1.controller.battle import Battle
 from SOURCE_CODE_0307_VERSION_1.data.database import DatabaseManager
 from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
@@ -219,7 +217,7 @@ class GameController:
             self.report('\n     You dont have any healing potions.')
         elif int == 2:
             if self.hero.vision_potions:
-                self.report(self.dungeon.display_dungeon(self.current_location))
+                self.report(f'\n\n{self.dungeon.display_dungeon(self.current_location)}')
                 self.hero.vision_potions -= 1
                 return
             self.report('\n     You dont have any vision potions.')

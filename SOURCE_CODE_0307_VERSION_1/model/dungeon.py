@@ -87,14 +87,14 @@ class Dungeon:
     def display_dungeon(self, player_position):
         dung = ''
         for row in range(self.height):
-            you_are_here = 'You are here:'
+            you_are_here = 'You are here:    '
             flag = ''
             room_tops = ''
             room_middles = ''
             room_bottoms = ''
             for room in range(self.width):
                 img = self.grid[row][room].print_room(True)
-                width = len(you_are_here)+3
+                width = len(you_are_here)
                 flag += ' '*width if player_position != (row,room) else you_are_here
                 room_tops+=img[0].ljust(width,' ')
                 room_middles+=img[1].ljust(width,' ')
