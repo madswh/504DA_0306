@@ -85,58 +85,75 @@ class Dungeon:
         return False
 
     def display_dungeon(self, player_position):
+        dung = ''
+        for row in range(self.height):
+            you_are_here = 'You are here:'
+            flag = ''
+            room_tops = ''
+            room_middles = ''
+            room_bottoms = ''
+            for room in range(self.width):
+                img = self.grid[row][room].print_room(True)
+                width = len(you_are_here)+3
+                flag += ' '*width if player_position != (row,room) else you_are_here
+                room_tops+=img[0].ljust(width,' ')
+                room_middles+=img[1].ljust(width,' ')
+                room_bottoms+=img[2].ljust(width,' ')
+            dung+=f'{flag}\n{room_tops}\n{room_middles}\n{room_bottoms}\n\n'
+        return dung
+        
         # Prepare to collect the representation of the dungeon.
-        dungeon_representation = []
+#         dungeon_representation = []
 
-        # Define a fixed width for each room representation.
-        room_width = 20
+#         # Define a fixed width for each room representation.
+#         room_width = 20
 
-        for x in range(self.height):
-            top_row = []
-            middle_row = []
-            bottom_row = []
-            feature_row = []
-            coordinates_row = []
+#         for x in range(self.height):
+#             top_row = []
+#             middle_row = []
+#             bottom_row = []
+#             feature_row = []
+#             coordinates_row = []
 
-            for y in range(self.width):
-                room = self.grid[x, y]
-                # Get the string representation of each room.
-                room_lines = str(room).strip().split('\n')  # Get all lines from the room's string representation.
+#             for y in range(self.width):
+#                 room = self.grid[x, y]
+#                 # Get the string representation of each room.
+#                 room_lines = str(room).strip().split('\n')  # Get all lines from the room's string representation.
 
-                # Ensure each room representation has a consistent width.
-                top_row.append(room_lines[0].ljust(room_width))     # Top row of the room.
-                middle_row.append(room_lines[1].ljust(room_width))  # Middle row of the room.
-                bottom_row.append(room_lines[2].ljust(room_width))  # Bottom row of the room.
+#                 # Ensure each room representation has a consistent width.
+#                 top_row.append(room_lines[0].ljust(room_width))     # Top row of the room.
+#                 middle_row.append(room_lines[1].ljust(room_width))  # Middle row of the room.
+#                 bottom_row.append(room_lines[2].ljust(room_width))  # Bottom row of the room.
 
-                # Add room coordinates.
-                coordinates_row.append(f"Room({x}, {y})".ljust(room_width))  # Add coordinates.
+#                 # Add room coordinates.
+#                 coordinates_row.append(f"Room({x}, {y})".ljust(room_width))  # Add coordinates.
 
-                ### DEBUGGING STATEMENT - Do not remove.
-                # Collect features directly from the room representation
-                #features_str = "\n".join(room_lines[4:]).strip()   # Collect features and strip leading/trailing spaces.
+#                 ### DEBUGGING STATEMENT - Do not remove.
+#                 # Collect features directly from the room representation
+#                 #features_str = "\n".join(room_lines[4:]).strip()   # Collect features and strip leading/trailing spaces.
 
-                # Prepend the room name to the features
-                #feature_row.append(f"\nRoom({x}, {y})\n" + features_str)   # Add room name and features.
+#                 # Prepend the room name to the features
+#                 #feature_row.append(f"\nRoom({x}, {y})\n" + features_str)   # Add room name and features.
 
-            # "YOU ARE HERE!" message for the current player's position.
-            for y in range(self.width):
-                if (x, y) == player_position:
-                    dungeon_representation.append("YOU ARE HERE!".ljust(room_width))  # Above the coordinates.
+#             # "YOU ARE HERE!" message for the current player's position.
+#             for y in range(self.width):
+#                 if (x, y) == player_position:
+#                     dungeon_representation.append("YOU ARE HERE!".ljust(room_width))  # Above the coordinates.
 
-            # Append the parts for the entire row, ensuring uniform height.
-            dungeon_representation.append(" ".join(coordinates_row))    # Add coordinates row.
-            dungeon_representation.append(" ".join(top_row))            # Top row of the rooms.
-            dungeon_representation.append(" ".join(middle_row))         # Middle row of the rooms.
-            dungeon_representation.append(" ".join(bottom_row))         # Bottom row of the rooms.
+#             # Append the parts for the entire row, ensuring uniform height.
+#             dungeon_representation.append(" ".join(coordinates_row))    # Add coordinates row.
+#             dungeon_representation.append(" ".join(top_row))            # Top row of the rooms.
+#             dungeon_representation.append(" ".join(middle_row))         # Middle row of the rooms.
+#             dungeon_representation.append(" ".join(bottom_row))         # Bottom row of the rooms.
 
-            # Add a separator for features to ensure they are distinct.
-            dungeon_representation.append("\n".join(feature_row))       # Add feature rows.
-            dungeon_representation.append("")                           # Add a blank line for separation.
+#             # Add a separator for features to ensure they are distinct.
+#             dungeon_representation.append("\n".join(feature_row))       # Add feature rows.
+#             dungeon_representation.append("")                           # Add a blank line for separation.
 
-        # Join all rows with newline characters.
-        print("\n".join(dungeon_representation))
+#         # Join all rows with newline characters.
+#         print("\n".join(dungeon_representation))
 
-'''
+# '''
 # # Test Case for Functionality:
 # if __name__ == '__main__':
 #     dungeon = Dungeon(width=5, height=5)
@@ -147,4 +164,4 @@ class Dungeon:
 #
 #     # Dummy player position, e.g., (0, 0) for testing.
 #     dungeon.display_dungeon((0, 0))
-'''
+# '''

@@ -152,57 +152,32 @@ class Room:
             self.items.append(self.other_potion)
 
 
-    def __str__(self):
+    def print_room(self,vision_potion=False):
         """ ✅ Updated room display to ensure correct feature representation. """
-        center_symbols = []
+        center_symbols = ''
 
         if self.is_entrance:
-            center_symbols.append("entrance")
+            center_symbols += ("i")
         if self.is_exit:
-            center_symbols.append("exit")
+            center_symbols += ("e")
         if self.pillar:
-            center_symbols.append(self.pillar.name)  # Use name from Pillar.
+            center_symbols += (f'{self.pillar.name[0]}')  # Use name from Pillar.
         if self.healing_potion:
-            center_symbols.append("H")
+            center_symbols += ("H")
         if self.vision_potion:
-            center_symbols.append("V")
-        if self.other_potion:
-            center_symbols.append("p")
+            center_symbols += ("V")
         if self.pit:
-            center_symbols.append("X")
+            center_symbols += ("X")
         if self.monster:
-            center_symbols.append("M")
-
+            center_symbols += ("M")
         # Room layout.
-        top = "***" if not self.__north else "*-*"
-        middle = f"{'|' if self.__west else '*'} {' '.join(center_symbols) if center_symbols else ' '} {'|' if self.__east else '*'}"
-        bottom = "***" if not self.__south else "*-*"
-
-        features = []
-        if self.monster:
-            features.append(str(self.monster.name))
-        if self.pillar:
-            features.append(str(self.pillar.name))
-        if self.healing_potion:
-            features.append(str(self.healing_potion))
-        if self.vision_potion:
-            features.append(str(self.vision_potion))
-        if self.other_potion:
-            features.append(str(self.other_potion))
-        if self.pit:
-            features.append(str(self.pit))
-        if self.is_entrance:
-            features.append(str(self.is_entrance))
-        if self.is_exit:
-            features.append(str(self.is_exit))
-
-        features_str = "\n".join(features) if features else "No features"
-
-        return (
-            f"\n{top}\n{middle}\n{bottom}\n"
-            f"\nRoom Features:\n{features_str}"
-        )
-
+        leftover_space = 4-len(center_symbols)
+        
+        top = "*"*6 if not self.north else '*'+'-'*4+'*'
+        middle = f"{'|' if self.west else '*'}{center_symbols}{' '*leftover_space}{'|' if self.east else '*'}"
+        bottom = "*"*6 if not self.south else '*'+'-'*4+'*'
+        if vision_potion == True: return [top,middle,bottom]
+        return f'\n{top}\n{middle}\n{bottom}\n'
 
 # Test Case for Functionality:
 # if __name__ == '__main__':

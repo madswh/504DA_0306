@@ -150,6 +150,7 @@ class GameController:
 
     def display_room_contents(self):
         """Display the contents of the current room."""
+        self.report(self.current_room.print_room(False))
         if not self.current_room.items: self.report('Room is empty'); return
         self.manage_room_contents()
         
@@ -202,7 +203,7 @@ class GameController:
         if self.current_room.pillar:
             n = self.current_room.pillar
             self.hero.pillars.append(n)
-            self.report(f"\nYou have collected the {n.name} pillar!")
+            self.report(f"\n    You have collected the {n.name} pillar!")
             self.current_room.pillar = None  # Remove pillar from the room
             self.current_room.items.remove(n)
 
@@ -213,27 +214,27 @@ class GameController:
                 health = random.randint(self.hero.min_heal,self.hero.max_heal)
                 self.hero.hit_points += health
                 self.hero.healing_potions -= 1
-                self.report(f'You used a healing potion and gained {health} HP.')
+                self.report(f'\n    You used a healing potion and gained {health} HP.')
                 return
-            self.report('You dont have any healing potions.')
+            self.report('\n     You dont have any healing potions.')
         elif int == 2:
             if self.hero.vision_potions:
-                self.dungeon.display_dungeon(self.current_location)
+                self.report(self.dungeon.display_dungeon(self.current_location))
                 self.hero.vision_potions -= 1
                 return
-            self.report('You dont have any vision potions.')
+            self.report('\n     You dont have any vision potions.')
 
     def hero_death(self,battle=False):
         if self.hero.hit_points > 0: return False
         if battle:
-            self.report("You were slain in battle, the game is over.")
+            self.report("\n\n   You were slain in battle, the game is over.")
             return True
-        self.report('Your health has slipped away, the game is over.')
+        self.report('\n\n   Your health has slipped away, the game is over.')
         return True
 
     def check_for_end_condition(self):
         if self.current_room.is_exit and len(self.hero.pillars) != 4:
-            self.report(f'To exit, you must collect all 4 pillars.')
+            self.report(f'\n    To exit, you must collect all 4 pillars.')
             return False
         
         if self.current_room.is_exit and len(self.hero.pillars) == 4:
@@ -243,7 +244,7 @@ class GameController:
             if self.hero_death(battle=True): return True
             if not self.current_room.monster:
                 self.report("\n\n\n         Congratulation! You've collected all four pillars, defeated the Final Boss and escaped the dungeon. You win!"); return True
-            self.report('You cannot win until the Final Boss is defeated.');return False
+            self.report('\n     You cannot win until the Final Boss is defeated.');return False
 
     def play(self):
         """Main game loop to handle the game play."""
@@ -256,9 +257,9 @@ class GameController:
             self.display_room_contents()
             
             action = self.view.get_player_action()
-            self.view.clear_screen()
             
             if action == 1:
+                self.view.clear_screen()
                 self.move_adventurer()
                 if self.hero_death(): return
                 
@@ -266,7 +267,7 @@ class GameController:
                 if self.current_room.monster:  
                     Battle(self, self.view)
                     if self.hero_death(battle=True) == True: return
-                else: self.report(f'Cool your jets, {self.hero.name}! There is no monster here to attack!')
+                else: self.report(f'\n      Cool your jets, {self.hero.name}! There is no monster here to attack!')
 
             elif action == 3: self.use_potion()
 
