@@ -90,9 +90,11 @@ class Battle:
         else: self.report('\nNo action taken.')
     
     def handle_monster_death(self):
+        n = self.monster
         if self.monster.is_boss:
             self.controller.defeated_bosses += 1
-
+        
+        self.controller.current_room.items.remove(n)
         self.controller.current_room.monster = None
         self.monster = None
 

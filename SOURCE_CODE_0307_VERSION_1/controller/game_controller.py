@@ -15,20 +15,32 @@ from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 class GameController:
     """Class to control the game logic and flow."""
 
-    def __init__(self):
-        """Initialize the GameController with default attributes and set up the game."""
-        self.hero = None
-        self.view = None
-        self.current_location = (0, 0)
-        self.current_room = None
+    # def __init__(self): ##actual init method
+    #     """Initialize the GameController with default attributes and set up the game."""
+    #     self.hero = None
+    #     self.view = None
+    #     self.current_location = (0, 0)
+    #     self.current_room = None
+    #     self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
+    #     self.defeated_bosses = 0  # Track number of defeated bosses
+
+    #     self.conn = self.get_conn()
+    #     self.dungeon = Dungeon(self.conn)
+    #     self.pickler = Pickler()
+
+    #     self.initialize_game()
+    def __init__(self,hero): #FOR TESTING FINAL BOSS CLASS ONLY!!!
+        self.hero = hero
+        self.view = GameView(self)
+        self.conn = self.get_conn()
+        self.dungeon = Dungeon(self.conn,1,2)
+        
+        for i in self.dungeon.grid:
+            for j in i: 
+                if j.is_exit: self.current_room = j
         self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
         self.defeated_bosses = 0  # Track number of defeated bosses
 
-        self.conn = self.get_conn()
-        self.dungeon = Dungeon(self.conn)
-        self.pickler = Pickler()
-
-        self.initialize_game()
 
     def get_conn(self):
         """Establish a connection to the database.
@@ -80,13 +92,12 @@ class GameController:
         self.view = GameView(self)
         if self.find_pickles() and self.view.load_from_saved_game() == 1:
             self.dungeon, self.hero, self.current_location = self.pickler.load_game()
-            self.current_room = self.dungeon.get_room(self.current_location[0],self.current_location[1])
             self.dungeon.conn = self.conn
         else:
             name = self.view.enter_name()
             self.choose_hero(self.view.choose_hero_class())
             self.hero.name = f'{name} the {self.hero.name}'
-            self.current_room = self.dungeon.get_room(0,0)
+        self.current_room = self.dungeon.get_room(self.current_location[0],self.current_location[1])
         self.view.clear_screen()
         self.view.hero = self.hero
         self.play()
@@ -109,23 +120,23 @@ class GameController:
         if self.current_room.healing_potion:
             n = self.current_room.healing_potion
             self.hero.healing_potions += 1
-            self.current_room.healing_potion = None
             self.current_room.items.remove(n)
+            self.current_room.healing_potion = None
             self.report("\nYou collected a Healing Potion!")
 
         if self.current_room.vision_potion:
             n = self.current_room.vision_potion
             self.hero.vision_potions += 1
-            self.current_room.vision_potion = None
             self.current_room.items.remove(n)
+            self.current_room.vision_potion = None
             self.report("\nYou collected a Vision Potion!")
             
         if self.current_room.other_potion:
             n = self.current_room.other_potion
             potion_effect = self.hero.handle_other_potion(n.name)
             self.report(potion_effect)
-            self.current_room.other_potion = None  # Remove the potion from the room
             self.current_room.items.remove(n)
+            self.current_room.other_potion = None  # Remove the potion from the room
 
     def manage_room_contents(self):
         if self.current_room.monster:
@@ -238,11 +249,11 @@ class GameController:
             return False
         
         if self.current_room.is_exit and len(self.hero.pillars) == 4:
-            self.report("A Final Boss appears at the exit!")
+            self.report("\n\n           A Final Boss appears at the exit!")
             Battle(self,self.view)
             
             if self.hero_death(battle=True): return True
-            self.report("Congratulation! You've collected all four pillars, defeated the Final Boss and escaped the dungeon. You win!")
+            self.report("\n\n\n         Congratulation! You've collected all four pillars, defeated the Final Boss and escaped the dungeon. You win!")
             return True
 
     def play(self):

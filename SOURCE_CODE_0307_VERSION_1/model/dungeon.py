@@ -52,6 +52,7 @@ class Dungeon:
         entrance_position.is_entrance = True
         exit_position.is_exit = True
         exit_position.monster = self.monster_factory.create_final_boss()
+        exit_position.items.append(exit_position.monster)
 
     def fill_rooms_with_stuff(self):
         for row in self.grid:

@@ -54,19 +54,6 @@ class Gremlin(Monster):
         self.is_boss = data[9]
         self.flavor_text = data[10]
 
-    # def fill_stats(self):
-    #     data = self.get_stats()
-    #     self.hit_points = data[1]
-    #     self.min_damage = data[2]
-    #     self.max_damage = data[3]
-    #     self.attack_speed = data[4]
-    #     self.min_heal = data[5]
-    #     self.max_heal = data[6]
-    #     self.chance_to_hit = data[7]
-    #     self.chance_to_heal = data[8]
-    #     self.is_boss = data[9]
-    #     self.flavor_text = data[10]
-
     def attack(self, opponent):
         if self.can_hit():
             if not opponent.block():
@@ -161,7 +148,6 @@ class Gremlin(Monster):
     @property
     def attack_speed(self):
         return self.__attack_speed
-
     @attack_speed.setter
     def attack_speed(self, speed):
         self.__attack_speed = speed

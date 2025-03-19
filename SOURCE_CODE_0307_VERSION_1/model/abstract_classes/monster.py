@@ -1,7 +1,5 @@
 from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.dungeon_character import DungeonCharacter
 from abc import ABC, abstractmethod
-import random
-from SOURCE_CODE_0307_VERSION_1.data.database import create_connection
 
 class Monster(DungeonCharacter,ABC):
     def __init__(self):
