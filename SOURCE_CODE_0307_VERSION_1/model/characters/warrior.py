@@ -13,7 +13,7 @@ class Warrior(Hero):
         self.__min_heal = 0
         self.__max_heal = 0
         
-        self.vision_potions = 0
+        self.vision_potions = 1
         self.healing_potions = 0
         self.pillars = []
         self.conn = db_conn

@@ -13,7 +13,7 @@ class Thief(Hero):
         self.__min_heal = 0
         self.__max_heal = 0
         
-        self.vision_potions = 0
+        self.vision_potions = 1
         self.healing_potions = 0
         self.pillars = []
         self.conn = db_conn
@@ -72,12 +72,11 @@ class Thief(Hero):
 
     def special_skill(self):
         surprise_chance = random.random()
-        if surprise_chance <= 0.4:
-            return random.randint(self.min_damage, self.max_damage),'surprise'  # Return surprise attack damage.
-        elif surprise_chance <= 0.6:
-            return random.randint(self.min_damage, self.max_damage),'normal'  # Return normal attack damage.
-        else:
-            return 0, 'none'
+        damage = random.randint(self.min_damage,self.max_damage)
+        
+        if surprise_chance <= 0.4: return damage,'surprise'  # Return surprise attack damage.
+        elif surprise_chance <= 0.6: return damage,'normal'  # Return normal attack damage.
+        return None
         
     @property
     def name(self):

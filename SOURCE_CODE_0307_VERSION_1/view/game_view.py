@@ -98,18 +98,17 @@ class GameView:
                
     def get_move_direction(self):
         print("Please choose a direction:")
-        print("1. North (N)")
-        print("2. South (S)")
-        print("3. East (E)")
-        print("4. West (W)")
+        print("(w) Up")
+        print("(a) Left")
+        print("(s) Down")
+        print("(d) Right")
         while True:
             try:
-                direction = int(input("Please enter the number corresponding to your direction: "))
-                if direction in [1,2,3,4]:
+                direction = input("Please enter the letter corresponding to your direction: ")
+                if direction in ['w','a','s','d']:
                     return direction
             except ValueError as e:
-                if e: print("Invalid input! Please enter 1, 2, 3, or 4.")
-
+                if e: print("Invalid input! Please enter (w) Up, (a) Left, (s) Down or (d) Right")
 
     def get_potion_type(self):
         print("Choose a potion to use:")

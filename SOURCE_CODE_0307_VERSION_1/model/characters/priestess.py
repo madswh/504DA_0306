@@ -13,7 +13,7 @@ class Priestess(Hero):
         self.__min_heal = 0
         self.__max_heal = 0
         
-        self.vision_potions = 0
+        self.vision_potions = 1
         self.healing_potions = 0
         self.pillars = []
         self.conn = db_conn
@@ -67,9 +67,11 @@ class Priestess(Hero):
         return None
     
     def special_skill(self):
-        healing = random.randint(30, 60)
-        self.hit_points += healing
-        return healing
+        if random.random() <= 0.8:
+            healing = random.randint(30, 60)
+            self.hit_points += healing
+            return healing
+        return None
     
     @property
     def name(self):
