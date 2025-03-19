@@ -15,32 +15,20 @@ from SOURCE_CODE_0307_VERSION_1.data.pickler import Pickler
 class GameController:
     """Class to control the game logic and flow."""
 
-    # def __init__(self): ##actual init method
-    #     """Initialize the GameController with default attributes and set up the game."""
-    #     self.hero = None
-    #     self.view = None
-    #     self.current_location = (0, 0)
-    #     self.current_room = None
-    #     self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
-    #     self.defeated_bosses = 0  # Track number of defeated bosses
-
-    #     self.conn = self.get_conn()
-    #     self.dungeon = Dungeon(self.conn)
-    #     self.pickler = Pickler()
-
-    #     self.initialize_game()
-    def __init__(self,hero): #FOR TESTING FINAL BOSS CLASS ONLY!!!
-        self.hero = hero
-        self.view = GameView(self)
-        self.conn = self.get_conn()
-        self.dungeon = Dungeon(self.conn,1,2)
-        
-        for i in self.dungeon.grid:
-            for j in i: 
-                if j.is_exit: self.current_room = j
+    def __init__(self):
+        """Initialize the GameController with default attributes and set up the game."""
+        self.hero = None
+        self.view = None
+        self.current_location = (0, 0)
+        self.current_room = None
         self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
         self.defeated_bosses = 0  # Track number of defeated bosses
 
+        self.conn = self.get_conn()
+        self.dungeon = Dungeon(self.conn)
+        self.pickler = Pickler()
+
+        self.initialize_game()
 
     def get_conn(self):
         """Establish a connection to the database.
@@ -253,8 +241,9 @@ class GameController:
             Battle(self,self.view)
             
             if self.hero_death(battle=True): return True
-            self.report("\n\n\n         Congratulation! You've collected all four pillars, defeated the Final Boss and escaped the dungeon. You win!")
-            return True
+            if not self.current_room.monster:
+                self.report("\n\n\n         Congratulation! You've collected all four pillars, defeated the Final Boss and escaped the dungeon. You win!"); return True
+            self.report('You cannot win until the Final Boss is defeated.');return False
 
     def play(self):
         """Main game loop to handle the game play."""
