@@ -15,16 +15,16 @@ class GameController:
 
     def __init__(self):
         """Initialize the GameController with default attributes and set up the game."""
-        self.hero = None
-        self.view = None
-        self.current_location = (0, 0)
-        self.current_room = None
-        self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
-        self.defeated_bosses = 0  # Track number of defeated bosses
-
         self.conn = self.get_conn()
         self.dungeon = Dungeon(self.conn)
         self.pickler = Pickler()
+        
+        self.hero = None
+        self.view = None
+        self.current_location = (0, 0)
+        self.current_room = self.dungeon.grid[0][0]
+        self.final_boss_spawned = False  # Flag to ensure final boss only spawns once
+        self.defeated_bosses = 0  # Track number of defeated bosses
 
         self.initialize_game()
 
@@ -46,7 +46,7 @@ class GameController:
         self.conn.close()
         self.conn = None
         self.dungeon.conn = None
-        self.dungeon.monster_factory.conn = None
+        self.dungeon.factory.conn = None
         self.hero.conn = None
         for row in self.dungeon.grid:
             for room in row:
@@ -69,7 +69,7 @@ class GameController:
     def quit_game(self):
         if self.view.confirm_quit():
             self.scrub_all_conns()
-            self.pickler.save_game(self.dungeon, self.hero, self.current_location)
+            self.pickler.save_game(self.dungeon, self.hero, self.current_room)
             self.report("Thank you for playing!\n\n...saving game for later use...")
             return True
 
@@ -77,19 +77,19 @@ class GameController:
         """Initialize the game by setting up the view and loading or starting a new game."""
         self.view = GameView(self)
         if self.find_pickles() and self.view.load_from_saved_game() == 1:
-            self.dungeon, self.hero, self.current_location = self.pickler.load_game()
+            self.dungeon, self.hero, self.current_room = self.pickler.load_game()
             self.dungeon.conn = self.conn
         else:
             name = self.view.enter_name()
-            self.choose_hero(self.view.choose_hero_class())
+            self.choose_hero()
             self.hero.name = f'{name} the {self.hero.name}'
-        self.current_room = self.dungeon.get_room(self.current_location[0],self.current_location[1])
         self.view.clear_screen()
         self.view.hero = self.hero
         self.play()
 
-    def choose_hero(self, choice):
+    def choose_hero(self):
         """Choose the hero class based on user input."""
+        choice = self.view.choose_hero_class()
         if choice == 1:
             self.hero = Warrior(self.conn)
         elif choice == 2:
@@ -101,8 +101,26 @@ class GameController:
     def report(self,message):
         self.view.display_message(message)
     
-    def manage_potions(self):
-        """Check if the current room contains potions and update the hero's inventory."""
+    def manage_room_contents(self):
+        if self.current_room.pit:
+            n = self.current_room.pit
+            pit_damage = random.randint(20, 50)
+            str1 = f"The air in this room is sulphurous ~ you took {pit_damage} damage!"
+            str2 = f"You fell into a pit and took {pit_damage} damage!"
+            self.hero.hit_points -= pit_damage
+            self.current_room.pit = None
+            self.current_room.items.remove(n)
+            self.report(random.choice([str1,str2]))
+            
+        elif self.current_room.monster:
+            self.view.print_monster_image(self.current_room.monster)
+            self.view.display_monster_info(self.current_room.monster)
+            
+        if self.current_room.pillar:
+            self.report(f"""
+                    The {self.current_room.monster.name} is guarding the Pillar of {self.current_room.pillar.name}.
+                    Defeat the {self.current_room.monster.name} to collect it.""")
+            
         if self.current_room.healing_potion:
             n = self.current_room.healing_potion
             self.hero.healing_potions += 1
@@ -124,77 +142,34 @@ class GameController:
             self.current_room.items.remove(n)
             self.current_room.other_potion = None  # Remove the potion from the room
 
-    def manage_room_contents(self):
-        if self.current_room.monster:
-            self.view.print_monster_image(self.current_room.monster)
-            self.view.display_monster_info(self.current_room.monster)
-            
-        if self.current_room.pillar:
-            self.report(f"""
-                    The {self.current_room.monster.name} is guarding the Pillar of {self.current_room.pillar.name}.
-                    Defeat the {self.current_room.monster.name} to collect it.""")
-        
-        if self.current_room.pit:
-            n = self.current_room.pit
-            pit_damage = random.randint(20, 50)
-            str1 = f"The air in this room is sulphurous ~ you took {pit_damage} damage!"
-            str2 = f"You fell into a pit and took {pit_damage} damage!"
-            self.hero.hit_points -= pit_damage
-            self.current_room.pit = None
-            self.current_room.items.remove(n)
-            self.report(random.choice([str1,str2]))
-            
-        self.manage_potions()
-
     def display_room_contents(self):
         """Display the contents of the current room."""
-        self.report(self.current_room.print_room(False))
+        self.report(self.current_room.print_room())
         if not self.current_room.items: self.report('Room is empty'); return
         self.manage_room_contents()
         
     def move_adventurer(self):
-        """Move the adventurer in the specified direction.
-
-        Args:
-            direction (int): The direction to move (1: up, 2: down, 3: right, 4: left).
-        """
-        x, y = self.current_location
-        new_loc = self.calculate_new_location(x, y)
-
-        # Check if the new location is within dungeon bounds.
-        if not (0 <= new_loc[0] < self.dungeon.height and 0 <= new_loc[1] < self.dungeon.width):
-            self.report("You can't move in that direction! You're at the edge of the dungeon.")
-            return
-
-        # Update the current location if the move is valid.
-        self.current_location = new_loc
-        self.current_room = self.dungeon.get_room(*self.current_location)
-        self.current_room.is_visited = True  # Mark this room as visited.
-
-    def calculate_new_location(self, x, y):
-        """Calculate the new location based on the current location and direction.
-
-        Args:
-            x (int): The current x-coordinate.
-            y (int): The current y-coordinate.
-            direction (int): The direction to move (1: up, 2: down, 3: right, 4: left).
-
-        Returns:
-            tuple: The new (x, y) location.
-        """
         direction = self.view.get_move_direction()
         
         if direction == 'w':
-            return x - 1, y
+            if self.current_room.up: self.current_room = self.current_room.up; return
+            self.view.clear_screen()
+            self.report('\nCannot go Up')
+            
         elif direction == 's':
-            return x + 1, y
-        elif direction == 'd':
-            return x, y + 1
-        elif direction == 'a':
-            return x, y - 1
+            if self.current_room.down: self.current_room = self.current_room.down; return
+            self.view.clear_screen()
+            self.report('\nCannot go Down')
 
-    def show_previous_direction(self):
-        self.report(f'Previously traveled direction: {self.travel_history}')
+        elif direction == 'd':
+            if self.current_room.right: self.current_room = self.current_room.right; return
+            self.view.clear_screen()
+            self.report('\nCannot go Right')
+
+        elif direction == 'a':
+            if self.current_room.left: self.current_room = self.current_room.left; return
+            self.view.clear_screen()
+            self.report('\nCannot go Left')
     
     def collect_pillar(self):
         """Collect a pillar if present in the current room."""
@@ -217,7 +192,7 @@ class GameController:
             self.report('\n     You dont have any healing potions.')
         elif int == 2:
             if self.hero.vision_potions:
-                self.report(f'\n\n{self.dungeon.display_dungeon(self.current_location)}')
+                self.report(f'\n\n{self.dungeon.display_dungeon(self.current_room.coordinates)}')
                 self.hero.vision_potions -= 1
                 return
             self.report('\n     You dont have any vision potions.')

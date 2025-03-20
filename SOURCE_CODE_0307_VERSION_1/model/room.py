@@ -2,10 +2,13 @@ import random
 from SOURCE_CODE_0307_VERSION_1.model.factories.potion_factory import PotionFactory
 from SOURCE_CODE_0307_VERSION_1.model.factories.monster_factory import MonsterFactory
 from SOURCE_CODE_0307_VERSION_1.model.factories.pillar_factory import PillarFactory
+from SOURCE_CODE_0307_VERSION_1.model.factories.room_contents_factory import RoomContentsFactory
 
 
 class Room:
-    def __init__(self, monster_factory:MonsterFactory, pillar_factory:PillarFactory,potion_factory:PotionFactory,initialize_contents=True):
+    def __init__(self, factory: RoomContentsFactory,initialize_contents=True):
+        self.__factory = factory
+        
         self.__healing_potion = None
         self.__vision_potion = None
         self.__other_potion = None
@@ -13,12 +16,8 @@ class Room:
 
         self.__is_entrance = False
         self.__is_exit = False
-        
         self.__is_visited = False  # Track if the room has been visited.
 
-        self.__monster_factory = monster_factory
-        self.__pillar_factory = pillar_factory
-        self.__potion_facotry = potion_factory
         self.__pillar = None
         self.__monster = None
         self.__items = []  # Initialize the items list.
@@ -27,12 +26,17 @@ class Room:
             # self.initialize_room_contents()
         
         # Initialize door state whether it is open or closed.
-        self.__north = random.choice([True, False])
-        self.__east = random.choice([True, False])
-        self.__west = random.choice([True, False])
-        self.__south = random.choice([True, False])
-        if not (self.__north or self.__east or self.__west or self.__south):
-            self.__north = True  # At least one door open.
+        # self.__north = random.choice([True, False])
+        # self.__east = random.choice([True, False])
+        # self.__west = random.choice([True, False])
+        # self.__south = random.choice([True, False])
+        # if not (self.__north or self.__east or self.__west or self.__south):
+        #     self.__north = True  # At least one door open.
+        self.__up = None
+        self.__down = None
+        self.__right = None
+        self.__left = None
+        self.__coordinates = None
 
     @property
     def is_entrance(self):
@@ -49,25 +53,43 @@ class Room:
         self.__is_exit = other
     
     @property
-    def north(self):
-        return self.__north
+    def up(self):
+        return self.__up
+    @up.setter
+    def up(self,other):
+        self.__up = other
     
     @property
-    def south(self):
-        return self.__south
+    def down(self):
+        return self.__down
+    @down.setter
+    def down(self,other):
+        self.__down = other
     
     @property
-    def east(self):
-        return self.__east
+    def right(self):
+        return self.__right
+    @right.setter
+    def right(self,other):
+        self.__right = other
+        
+    @property
+    def left(self):
+        return self.__left
+    @left.setter
+    def left(self,other):
+        self.__left = other
 
     @property
-    def west(self):
-        return self.__west
-
+    def coordinates(self):
+        return self.__coordinates
+    @coordinates.setter
+    def coordinates(self,other:tuple):
+        self.__coordinates = other
+        
     @property
     def monster(self):
         return self.__monster
-
     @monster.setter
     def monster(self, monster):
         self.__monster = monster
@@ -75,7 +97,6 @@ class Room:
     @property
     def vision_potion(self):
         return self.__vision_potion
-
     @vision_potion.setter
     def vision_potion(self, vision_potion):
         self.__vision_potion = vision_potion
@@ -83,7 +104,6 @@ class Room:
     @property
     def other_potion(self):
         return self.__other_potion
-
     @other_potion.setter
     def other_potion(self, other_potion):
         self.__other_potion = other_potion
@@ -91,7 +111,6 @@ class Room:
     @property
     def healing_potion(self):
         return self.__healing_potion
-
     @healing_potion.setter
     def healing_potion(self, healing_potion):
         self.__healing_potion = healing_potion
@@ -99,7 +118,6 @@ class Room:
     @property
     def pillar(self):
         return self.__pillar
-
     @pillar.setter
     def pillar(self, pillar):
         self.__pillar = pillar
@@ -107,7 +125,6 @@ class Room:
     @property
     def pit(self):
         return self.__pit
-
     @pit.setter
     def pit(self, pit):
         self.__pit = pit
@@ -116,39 +133,46 @@ class Room:
     def items(self):
         return self.__items
 
+    @property
+    def is_visited(self):
+        return self.__is_visited
+    @is_visited.setter
+    def is_visited(self,other):
+        self.__is_visited = other
+    
     def initialize_room_contents(self):
         """
         ✅ Ensure a boss monster guards each pillar.
         """
         # ✅ If the room gets a pillar, assign a boss monster
         if random.random() < 0.5:
-            self.pillar = self.__pillar_factory.place_pillar() #either pillar or None
+            self.pillar = self.__factory.place_pillar() #either pillar or None
             if self.pillar:
-                self.monster = self.__monster_factory.create_boss_monster()
+                self.monster = self.__factory.place_boss_monster()
                 self.items.append(self.pillar)
                 self.items.append(self.monster)
 
         #ensure some rooms have regular monsters, without a pit
         if random.random() < 0.5 and not self.monster:
-            self.monster = self.__monster_factory.create_monster()
+            self.monster = self.__factory.place_regular_monster()
             self.items.append(self.monster)
         
         #ensure some monster-less rooms have a pit
         if random.random() < 0.5 and not self.monster:
-            self.pit = self.__potion_facotry.make_other_potion('P')
+            self.pit = self.__factory.place_pit()
             self.items.append(self.pit)
             
         #potions can go anywhere
         if random.random() < 0.5:
-            self.healing_potion = self.__potion_facotry.make_healing_potion()
+            self.healing_potion = self.__factory.place_potion('H')
             self.items.append(self.healing_potion)
-
+            
         if random.random() < 0.5:
-            self.vision_potion = self.__potion_facotry.make_vision_potion()
+            self.vision_potion = self.__factory.place_potion('V')
             self.items.append(self.vision_potion)
 
         if random.random() < 0.3:
-            self.other_potion = self.__potion_facotry.make_other_potion(random.choice(['A','M']))
+            self.other_potion = self.__factory.place_potion(random.choice(['A','M']))
             self.items.append(self.other_potion)
 
 
@@ -173,11 +197,11 @@ class Room:
         if self.monster:
             center_symbols += ("M")
         # Room layout.
-        leftover_space = 4-len(center_symbols)
+        leftover_space = 6-len(center_symbols)
         
-        top = "*"*6 if not self.north else '*'+'-'*4+'*'
-        middle = f"{'|' if self.west else '*'}{center_symbols}{' '*leftover_space}{'|' if self.east else '*'}"
-        bottom = "*"*6 if not self.south else '*'+'-'*4+'*'
+        top = "*"*8 if not self.up else '*'+'-'*6+'*'
+        middle = f"{'|' if self.left else '*'}{center_symbols}{' '*leftover_space}{'|' if self.right else '*'}"
+        bottom = "*"*8 if not self.down else '*'+'-'*6+'*'
         if vision_potion == True: return [top,middle,bottom]
         return f'\n{top}\n{middle}\n{bottom}\n'
 
