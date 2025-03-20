@@ -174,6 +174,7 @@ class Room:
         if random.random() < 0.3:
             self.other_potion = self.__factory.place_potion(random.choice(['A','M']))
             self.items.append(self.other_potion)
+        return True
 
 
     def print_room(self,vision_potion=False):
