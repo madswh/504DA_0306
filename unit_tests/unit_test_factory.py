@@ -5,6 +5,16 @@ class TestFactory:
     def __init__(self):
         self.conn = connect('SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
         self.factory = RoomContentsFactory(self.conn)
+        try:
+            self.test_factory_init_lists()
+            self.test_place_monster()
+            self.test_place_boss_monster()
+            self.test_place_final_boss()
+            self.test_place_pillar()
+            self.test_place_potion()
+            self.test_place_pit()
+            print('OK')
+        except AssertionError: print('something went wrong idk')
         
     def test_factory_init_lists(self):
         assert len(self.factory.available_bosses) == 4
