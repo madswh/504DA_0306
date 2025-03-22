@@ -1,6 +1,9 @@
 from abc import ABC,abstractmethod
 
 class Item(ABC):
+    """
+    abstract representation of an item found in a room.
+    """
     @abstractmethod
     def __init__(self, name):
         self.__name = name

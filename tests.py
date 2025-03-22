@@ -1,3 +1,3 @@
-from unit_tests.unit_tests_dungeon import unittest, TestDungeon
+from unit_tests.unit_tests_dungeon import TestDungeon
 
-TestDungeon.main()
+TestDungeon()

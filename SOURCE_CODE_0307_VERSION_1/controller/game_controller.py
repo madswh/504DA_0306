@@ -67,6 +67,11 @@ class GameController:
         return True
 
     def quit_game(self):
+        """Exit the game, autosaves dungeon, hero and the current room's state.
+
+        Returns:
+            Bool/None
+        """
         if self.view.confirm_quit():
             self.scrub_all_conns()
             self.pickler.save_game(self.dungeon, self.hero, self.current_room)
@@ -99,9 +104,17 @@ class GameController:
         self.view.hero = self.hero
         
     def report(self,message):
+        """Wrapper for printing to the console through the view object.
+
+        Args:
+            message (string): item to be displayed.
+        """
         self.view.display_message(message)
     
     def manage_room_contents(self):
+        """ Checks current room for objects: monsters, pits, pillars, potions.
+            prints applicable messages to console.
+        """
         if self.current_room.pit:
             n = self.current_room.pit
             pit_damage = random.randint(20, 50)
@@ -149,6 +162,8 @@ class GameController:
         self.manage_room_contents()
         
     def move_adventurer(self):
+        """Move the adventurer through the dungeon from user input.
+        """
         direction = self.view.get_move_direction()
         
         if direction == 'w':
@@ -181,6 +196,8 @@ class GameController:
             self.current_room.items.remove(n)
 
     def use_potion(self):
+        """Use a potion specified by user input.
+        """
         int = self.view.get_potion_type()
         if int == 1:
             if self.hero.healing_potions:
@@ -198,6 +215,14 @@ class GameController:
             self.report('\n     You dont have any vision potions.')
 
     def hero_death(self,battle=False):
+        """Check status of the hero during the game, prints appropriate message.
+
+        Args:
+            battle (bool, optional): Controlls which string to print upon hero death. Defaults to False.
+
+        Returns:
+            bool: Whether or not the hero has died.
+        """
         if self.hero.hit_points > 0: return False
         if battle:
             self.report("\n\n   You were slain in battle, the game is over.")
@@ -206,6 +231,11 @@ class GameController:
         return True
 
     def check_for_end_condition(self):
+        """At the exit of the dungeon, a boss is spawned. if the hero has 4 pillars, they can fight the boss to win the game.
+
+        Returns:
+            Bool: Whether or not the hero has 4 pillars and has defeated the boss, or if the hero died. 'True' end the game.
+        """
         if self.current_room.is_exit and len(self.hero.pillars) != 4:
             self.report(f'\n    To exit, you must collect all 4 pillars.')
             return False

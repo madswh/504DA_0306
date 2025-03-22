@@ -4,6 +4,7 @@ from SOURCE_CODE_0307_VERSION_1.model.room import Room
 from SOURCE_CODE_0307_VERSION_1.model.factories.room_contents_factory import RoomContentsFactory
 
 class Dungeon:
+    """Class representing a dungeon, holding a grid of room objects."""
     def __init__(self, db_conn, width=5, height=5):
         self.conn = db_conn
         self.__width = width
@@ -47,6 +48,7 @@ class Dungeon:
         self.__grid = grid
 
     def linked_grid(self):
+        """Connect the rooms"""
         while True:
             for row in range(self.height):
                 for col in range(self.width):
@@ -83,6 +85,7 @@ class Dungeon:
                     room.up,room.down,room.left,room.right = None,None,None,None
     
     def traversable(self,room):
+        """Ensure the exit to the dungeon can be reached from the entrance."""
         room.is_visited = True
         verdict = False
         if room == self.grid[-1][-1]: verdict = True; return verdict
@@ -102,17 +105,20 @@ class Dungeon:
         return verdict
 
     def set_entrance_exit(self):
+        """Set either the entrance or exit bools to True on the first and last rooms in the grid."""
         self.grid[0][0].is_entrance = True
         self.grid[-1][-1].is_exit = True
         self.grid[-1][-1].monster = self.factory.place_final_boss_monster()
         self.grid[-1][-1].items.append(self.grid[-1][-1].monster)
         
     def fill_rooms_with_stuff(self):
+        """fills all rooms with items and monsters, except the entrance and exit."""
         for row in self.grid:
             for room in row:
                 if not room.is_entrance and not room.is_exit: room.initialize_room_contents()
     
     def display_dungeon(self, player_position):
+        """prints the dungeon as a string."""
         dung = ''
         for row in range(self.height):
             you_are_here = 'You are here:    '

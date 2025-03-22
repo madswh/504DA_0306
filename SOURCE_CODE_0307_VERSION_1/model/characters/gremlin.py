@@ -37,6 +37,7 @@ class Gremlin(Monster):
     #     return data[0]
 
     def get_stats(self):
+        """ Fills class attributes from sqlite database."""
         cursor = self.conn.cursor()
         data = cursor.execute('SELECT * FROM monsters WHERE name =?', (self.name,)).fetchone()
         return data
@@ -55,6 +56,7 @@ class Gremlin(Monster):
         self.flavor_text = data[10]
 
     def attack(self, opponent):
+        """ Attack the opponent"""
         if self.can_hit():
             if not opponent.block():
                 opponent.get_hit(random.randint(self.__min_damage,self.__max_damage))
@@ -62,13 +64,16 @@ class Gremlin(Monster):
         return False
     
     def get_hit(self, damage):
+        """ Get hit by the opponent"""
         self.__hit_points -= damage
         return True
     
     def can_hit(self):
+        """ determines whether the character can attack."""
         return random.random() <= self.__chance_to_hit
         
     def heal(self):
+        """ self-healing during battle."""
         if random.random() <= self.chance_to_heal:
             heal_amount = random.randint(self.min_heal, self.max_heal)
             self.hit_points += heal_amount

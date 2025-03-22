@@ -32,6 +32,9 @@ class Battle:
         self.view.display_message(message)
 
     def use_special_skill(self):
+        """
+        This method is called when the player decides to use their hero's special skill.
+        """ 
         if isinstance(self.hero,Warrior):
             result = self.hero.special_skill()
             if result:
@@ -57,6 +60,8 @@ class Battle:
                 self.report(f'\n    {self.hero.name} performed a regular attack on {self.monster.name} for {result[0]} damage.'); return
      
     def thief_second_turn(self):
+        """functionality for theif's special skill.
+        """
         choice = self.view.get_player_action(battle=True)
         if choice == 1:  # Player chooses to attack
             if self.hero.attack(self.monster):
@@ -69,6 +74,10 @@ class Battle:
         elif choice == 4: return 0
     
     def hero_turn(self):
+        """Player input during battle.
+
+        Returns: None or False: False breaks the main battle loop.
+        """
         if self.hero.hit_points <= 0: return False
         choice = self.view.get_player_action(battle=True)
         if choice == 1:  # Player chooses to attack
@@ -80,6 +89,11 @@ class Battle:
         if choice == 4: self.report('\n     You decided to forfeit the battle.'); return False
         
     def monster_turn(self):
+        """Monster's turn during the battle.
+
+        Returns:
+            None or False
+        """
         if self.monster.hit_points <= 0: return False
         if random.choice([True, False]):
             if self.monster.attack(self.hero):
@@ -90,6 +104,8 @@ class Battle:
         else: self.report('\n   No action taken.')
     
     def handle_monster_death(self):
+        """removes monster object after defeat, collects pillars when applicable.
+        """
         n = self.monster
         
         self.controller.current_room.items.remove(n)

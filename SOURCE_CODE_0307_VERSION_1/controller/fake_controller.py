@@ -4,6 +4,9 @@ from SOURCE_CODE_0307_VERSION_1.model.items.pillar import Pillar
 import random
 
 class FakeController(GameController):
+    """Class created for testing the end condition of the game.
+
+    """
     def __init__(self):
         self.conn = super().get_conn()
         self.hero = Warrior(self.conn)

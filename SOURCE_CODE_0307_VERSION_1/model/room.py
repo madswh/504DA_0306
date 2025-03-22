@@ -6,6 +6,7 @@ from SOURCE_CODE_0307_VERSION_1.model.factories.room_contents_factory import Roo
 
 
 class Room:
+    """Class representing a room in the dungeon."""
     def __init__(self, factory: RoomContentsFactory,initialize_contents=True):
         self.__factory = factory
         
@@ -142,7 +143,7 @@ class Room:
     
     def initialize_room_contents(self):
         """
-        ✅ Ensure a boss monster guards each pillar.
+        Fills the room with various contents.
         """
         # ✅ If the room gets a pillar, assign a boss monster
         if random.random() < 0.5:
@@ -178,7 +179,10 @@ class Room:
 
 
     def print_room(self,vision_potion=False):
-        """ ✅ Updated room display to ensure correct feature representation. """
+        """ Returns a graphic representation of the room.
+        Returns:
+            list of strings if the entire dungeon is being printed\n
+            string if a single room is being printed."""
         center_symbols = ''
 
         if self.is_entrance:

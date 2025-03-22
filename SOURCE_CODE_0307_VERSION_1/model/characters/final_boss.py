@@ -52,10 +52,23 @@ class FinalBoss(Monster):
         return False
 
     def get_hit(self, damage):
+        """character loses points in battle.
+
+        Args:
+            damage (int): amount of points lost
+
+        Returns:
+            bool: whether character was hit, used to determine strings output in battle method.
+        """
         self.__hit_points -= damage
         return True
     
     def can_hit(self):
+        """determines whether character can attack.
+
+        Returns:
+            bool
+        """
         return random.random() <= self.__chance_to_hit
 
     def heal(self):

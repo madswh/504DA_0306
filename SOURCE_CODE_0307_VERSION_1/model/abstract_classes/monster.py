@@ -2,6 +2,9 @@ from SOURCE_CODE_0307_VERSION_1.model.abstract_classes.dungeon_character import 
 from abc import ABC, abstractmethod
 
 class Monster(DungeonCharacter,ABC):
+    """
+    abstract representation of a monster character
+    """
     def __init__(self):
         super().__init__()
         self.__name = 'Monster'
