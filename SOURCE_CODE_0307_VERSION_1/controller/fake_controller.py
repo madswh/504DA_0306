@@ -10,6 +10,7 @@ class FakeController(GameController):
     def __init__(self):
         self.conn = super().get_conn()
         self.hero = Warrior(self.conn)
+        self.hero.hit_points = 1 # test losing game
         self.hero.name = 'TEST'
         self.hero.pillars = [Pillar('A'),Pillar('E'),Pillar('I'),Pillar('P')]
         self.view = GameView(self)
