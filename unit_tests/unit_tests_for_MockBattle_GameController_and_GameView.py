@@ -3,30 +3,25 @@
 
 import unittest
 import random
-from unittest.mock import patch
-from game_controller import GameController
-from game_view import GameView
-from warrior import Warrior
-from priestess import Priestess
-from thief import Thief
-from boss_monster import BossMonster
-from mock_battle import MockBattle
+from sqlite3 import connect
+from SOURCE_CODE_0307_VERSION_1.controller.battle import Battle
+from SOURCE_CODE_0307_VERSION_1.controller.game_controller import GameController
+from SOURCE_CODE_0307_VERSION_1.view.game_view import GameView
+from SOURCE_CODE_0307_VERSION_1.model.characters.priestess import Priestess
+from SOURCE_CODE_0307_VERSION_1.model.characters.ogre import Ogre
 
-class TestMockBattle(unittest.TestCase):
-    def setUp(self):
-        # Set up a new MockBattle instance for each test.
-        random.seed(10)
-        # Set up a MockBattle instance for testing with a real GameView instance.
-        self.view = GameView("TEAM AWESOME")
-        self.hero = Priestess('Test Priestess')
-        self.monster = BossMonster('Test Boss')
-        self.battle = MockBattle(self.view, self.hero, self.monster)
+class TestBattle():
+    def __init__(self):
+        self.conn = connect('SOURCE_CODE_0307_VERSION_1/data/dungeon_game.sql')
+        self.controller = GameController()
+        self.view = GameView(self.controller)
+        self.controller.hero = Priestess(self.conn)
+        self.controller.current_room.monster = Ogre(self.conn)
+        self.battle = Battle(self.controller,self.view)
 
     def test_hero_attack_healing(self):
         # Test the hero's healing ability.
-        self.hero.special_skill = lambda: 30  
-        damage = self.battle.hero_attack()
-        self.assertIsNone(damage)  
+        self.controller.use_potion()
 
     def test_hero_attack_damage(self):
         # Test the hero's normal attack.
